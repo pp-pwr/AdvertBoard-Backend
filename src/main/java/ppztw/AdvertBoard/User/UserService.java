@@ -1,8 +1,12 @@
 package ppztw.AdvertBoard.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
 import ppztw.AdvertBoard.Model.User.Profile;
 import ppztw.AdvertBoard.Model.User.User;
@@ -10,6 +14,10 @@ import ppztw.AdvertBoard.Payload.ProfileInfo;
 import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Security.UserPrincipal;
 import ppztw.AdvertBoard.Util.CategoryEntryUtils;
+import ppztw.AdvertBoard.View.User.ProfileSummaryView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -43,4 +51,20 @@ public class UserService {
             userRepository.save(user);
         }
     }
+
+    public Page<ProfileSummaryView> getAllProfileSummaryViews(Pageable pageable,
+                                                              @RequestParam(required = false) String nameContains) {
+
+        Page<User> users;
+        if (nameContains != null && !nameContains.isEmpty())
+            users = userRepository.findAllByProfileVisibleNameLike(nameContains, pageable);
+        else
+            users = userRepository.findAll(pageable);
+
+        List<ProfileSummaryView> profileSummaryViewList = new ArrayList<>();
+        for (User user : users)
+            profileSummaryViewList.add(new ProfileSummaryView(user));
+        return new PageImpl<>(profileSummaryViewList, pageable, users.getTotalElements());
+    }
+
 }
