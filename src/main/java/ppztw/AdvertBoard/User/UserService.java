@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
 import ppztw.AdvertBoard.Model.User.Profile;
+import ppztw.AdvertBoard.Model.User.ProfileRating;
 import ppztw.AdvertBoard.Model.User.User;
 import ppztw.AdvertBoard.Payload.ProfileInfo;
+import ppztw.AdvertBoard.Repository.ProfileRatingRepository;
 import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Security.UserPrincipal;
 import ppztw.AdvertBoard.Util.CategoryEntryUtils;
@@ -24,6 +26,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProfileRatingRepository profileRatingRepository;
 
     public User findById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
@@ -67,6 +72,22 @@ public class UserService {
         for (User user : users)
             profileSummaryViewList.add(new ProfileSummaryView(user));
         return new PageImpl<>(profileSummaryViewList, pageable, users.getTotalElements());
+    }
+
+    public void rateProfile(Long userId, Long ratedProfileId, Integer rating) {
+        User user = findById(userId);
+        ProfileRating profileRating = profileRatingRepository.
+                findByRatingIdAndRatedId(user.getProfile().getId(), ratedProfileId).orElse(new ProfileRating());
+
+        profileRating.setRating(rating.doubleValue());
+        profileRating.setRatingId(user.getProfile().getId());
+        profileRating.setRatedId(ratedProfileId);
+        profileRatingRepository.save(profileRating);
+
+    }
+
+    public Double getProfileRating(Long profileId) {
+        return profileRatingRepository.getProfileRating(profileId);
     }
 
 

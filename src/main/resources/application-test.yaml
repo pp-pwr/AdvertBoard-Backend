@@ -1,0 +1,62 @@
+server:
+  servlet:
+    contextPath: /api
+spring:
+  application:
+    name: AdvertBoard
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: "jdbc:h2:mem:test-api;INIT=CREATE SCHEMA IF NOT EXISTS dbo\\;CREATE SCHEMA IF NOT EXISTS definitions;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;MODE=MSSQLServer"
+    name:
+    password:
+    username:
+    initialization-mode: never
+  jpa:
+    schema: dbo
+    database: H2
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  test:
+    database:
+      replace: none
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 790119077677-0tg65et9si754tg66bea5hh8nknhu1ag.apps.googleusercontent.com
+            clientSecret: EsRKGr6qm0LNrtMyz8yoTFKW
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          facebook:
+            clientId: 275078806738703
+            clientSecret: eaa8b3502da10581135acb2340d05502
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - public_profile
+        provider:
+          facebook:
+            authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
+            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
+            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpirationMsec: 864000000
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+      - http://advertboard.pl:3000/oauth2/redirect
+      - http://pwr-advert-board-frontend.herokuapp.com/oauth2/redirect
+
