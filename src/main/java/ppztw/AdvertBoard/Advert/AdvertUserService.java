@@ -1,13 +1,10 @@
 package ppztw.AdvertBoard.Advert;
 
 
-import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import ppztw.AdvertBoard.Exception.BadRequestException;
 import ppztw.AdvertBoard.Exception.IncorrectFileException;
 import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
@@ -125,15 +122,14 @@ public class AdvertUserService {
                                 Map<Long, String> additionalInfo) {
 
         List<Tag> tags = processTags(tagNames);
-        //Image img = processImage(imagePayload);
-
-        String imagePath;
-        try {
-            imagePath = saveImage(user.getId(), image);
-        } catch (Exception e) {
-            throw new IncorrectFileException(image != null ? image.getOriginalFilename() : null, e);
+        String imagePath = "";
+        if (image != null) {
+            try {
+                imagePath = saveImage(user.getId(), image);
+            } catch (Exception e) {
+                throw new IncorrectFileException(image != null ? image.getOriginalFilename() : null, e);
+            }
         }
-
         List<AdvertInfo> advertInfos = processAdvertInfo(category, additionalInfo);
 
         return advertRepository
