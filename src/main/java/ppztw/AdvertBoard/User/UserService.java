@@ -25,11 +25,14 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    public User findById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() ->
+                new ResourceNotFoundException("User", "id", userId));
+    }
+
     @Transactional
     public void processProfile(UserPrincipal userPrincipal, ProfileInfo profileInfo) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() ->
-                new ResourceNotFoundException("User", "id", userPrincipal.getId()));
-
+        User user = findById(userPrincipal.getId());
         Profile profile = user.getProfile() == null ? new Profile() : user.getProfile();
         profile.setContactMail(profileInfo.getContactMail());
         profile.setFirstName(profileInfo.getFirstName());
@@ -45,8 +48,7 @@ public class UserService {
 
     public void addCategoryEntry(Long categoryId, Long userId, Double val) {
         if (val > 0) {
-            User user = userRepository.findById(userId).orElseThrow(() ->
-                    new ResourceNotFoundException("User", "id", userId));
+            User user = findById(userId);
             user.setCategoryEntries(CategoryEntryUtils.addEntryValue(categoryId, user, val));
             userRepository.save(user);
         }
@@ -66,5 +68,6 @@ public class UserService {
             profileSummaryViewList.add(new ProfileSummaryView(user));
         return new PageImpl<>(profileSummaryViewList, pageable, users.getTotalElements());
     }
+
 
 }
