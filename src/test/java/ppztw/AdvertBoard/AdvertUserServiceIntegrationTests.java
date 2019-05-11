@@ -55,8 +55,6 @@ public class AdvertUserServiceIntegrationTests {
 
         Profile profile = new Profile();
 
-
-        profile.setUser(user);
         advert.setUser(user);
         advert.setCategory(category);
         List<Advert> advertList = new ArrayList<>();
