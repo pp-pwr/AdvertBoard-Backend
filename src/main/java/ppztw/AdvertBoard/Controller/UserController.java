@@ -1,12 +1,12 @@
 package ppztw.AdvertBoard.Controller;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
 import ppztw.AdvertBoard.Model.User.User;
 import ppztw.AdvertBoard.Payload.ApiResponse;
 import ppztw.AdvertBoard.Payload.ProfileInfo;
@@ -17,6 +17,8 @@ import ppztw.AdvertBoard.User.UserService;
 import ppztw.AdvertBoard.View.User.ProfileSummaryView;
 import ppztw.AdvertBoard.View.User.ProfileView;
 import ppztw.AdvertBoard.View.User.UserView;
+
+import javax.validation.Valid;
 
 @RestController
 public class UserController {
@@ -54,11 +56,15 @@ public class UserController {
     @GetMapping("/user/get")
     @PreAuthorize("permitAll()")
     public ProfileView getProfile(@RequestParam Long profileId) {
-        User user = userRepository.findByProfileId(profileId)
-                .orElseThrow(() -> new ResourceNotFoundException("Profile", "id", profileId));
-
-        return new ProfileView(user);
+        return userService.getProfileView(profileId);
     }
 
-
+    @PostMapping("/user/rate")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> rateProfile(@CurrentUser UserPrincipal userPrincipal,
+                                         @RequestParam @Valid Long profileId,
+                                         @RequestParam @Range(min = 1, max = 5) Integer rating) {
+        userService.rateProfile(userPrincipal.getId(), profileId, rating);
+        return ResponseEntity.ok(new ApiResponse(true, "User rated"));
+    }
 }

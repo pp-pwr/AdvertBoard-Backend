@@ -17,6 +17,7 @@ import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Security.UserPrincipal;
 import ppztw.AdvertBoard.Util.CategoryEntryUtils;
 import ppztw.AdvertBoard.View.User.ProfileSummaryView;
+import ppztw.AdvertBoard.View.User.ProfileView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,17 @@ public class UserService {
             profileSummaryViewList.add(new ProfileSummaryView(user));
         return new PageImpl<>(profileSummaryViewList, pageable, users.getTotalElements());
     }
+
+
+    public ProfileView getProfileView(Long profileId) {
+        User user = userRepository.findByProfileId(profileId)
+                .orElseThrow(() -> new ResourceNotFoundException("Profile", "id", profileId));
+
+        Double rating = getProfileRating(user.getProfile().getId());
+
+        return new ProfileView(user, rating);
+    }
+
 
     public void rateProfile(Long userId, Long ratedProfileId, Integer rating) {
         User user = findById(userId);
