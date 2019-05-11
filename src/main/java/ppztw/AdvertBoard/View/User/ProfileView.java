@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ppztw.AdvertBoard.Model.Advert.Advert;
-import ppztw.AdvertBoard.Model.User.Profile;
+import ppztw.AdvertBoard.Model.User.User;
 import ppztw.AdvertBoard.View.Advert.AdvertSummaryView;
 
 import java.util.ArrayList;
@@ -18,10 +18,10 @@ public class ProfileView extends MyProfileView {
 
     List<AdvertSummaryView> advertSummaryViews;
 
-    public ProfileView(Profile profile) {
-        super(profile);
+    public ProfileView(User user) {
+        super(user);
         this.advertSummaryViews = new ArrayList<>();
-        List<Advert> advertList = profile.getUser().getAdverts();
+        List<Advert> advertList = user.getAdverts();
         for (Advert advert : advertList)
             if (advert.getStatus() != Advert.Status.ARCHIVED &&
                     advert.getStatus() != Advert.Status.BANNED)

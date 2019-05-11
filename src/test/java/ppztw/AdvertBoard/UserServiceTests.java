@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
 import ppztw.AdvertBoard.Model.User.User;
-import ppztw.AdvertBoard.Repository.ProfileRepository;
 import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.User.UserService;
 
@@ -25,9 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserServiceTests {
     @MockBean
     private UserRepository userRepository;
-
-    @MockBean
-    private ProfileRepository profileRepository;
 
     @Autowired
     private UserService userService;

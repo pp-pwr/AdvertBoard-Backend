@@ -8,11 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
-import ppztw.AdvertBoard.Model.User.Profile;
 import ppztw.AdvertBoard.Model.User.User;
 import ppztw.AdvertBoard.Payload.ApiResponse;
 import ppztw.AdvertBoard.Payload.ProfileInfo;
-import ppztw.AdvertBoard.Repository.ProfileRepository;
 import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Security.CurrentUser;
 import ppztw.AdvertBoard.Security.UserPrincipal;
@@ -30,9 +28,6 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ProfileRepository profileRepository;
 
     @Autowired
     private UserService userService;
@@ -59,25 +54,25 @@ public class UserController {
     public Page<ProfileSummaryView> getAllUsers(Pageable pageable,
                                                 @RequestParam(required = false) String nameContains) {
 
-        Page<Profile> profiles;
+        Page<User> users;
         if (nameContains != null && !nameContains.isEmpty())
-            profiles = profileRepository.findAllByVisibleNameLike(nameContains, pageable);
+            users = userRepository.findAllByProfileVisibleNameLike(nameContains, pageable);
         else
-            profiles = profileRepository.findAll(pageable);
+            users = userRepository.findAll(pageable);
 
         List<ProfileSummaryView> profileSummaryViewList = new ArrayList<>();
-        for (Profile profile : profiles)
-            profileSummaryViewList.add(new ProfileSummaryView(profile));
-        return new PageImpl<>(profileSummaryViewList, pageable, profiles.getTotalElements());
+        for (User user : users)
+            profileSummaryViewList.add(new ProfileSummaryView(user));
+        return new PageImpl<>(profileSummaryViewList, pageable, users.getTotalElements());
     }
 
 
     @GetMapping("/user/get")
     @PreAuthorize("permitAll()")
     public ProfileView getProfile(@Valid Long profileId) {
-        Profile profile = profileRepository.findById(profileId)
+        User user = userRepository.findByProfileId(profileId)
                 .orElseThrow(() -> new ResourceNotFoundException("Profile", "id", profileId));
 
-        return new ProfileView(profile);
+        return new ProfileView(user);
     }
 }

@@ -21,7 +21,6 @@ import ppztw.AdvertBoard.Repository.Advert.AdvertRepository;
 import ppztw.AdvertBoard.Repository.Advert.CategoryInfoRepository;
 import ppztw.AdvertBoard.Repository.Advert.CategoryRepository;
 import ppztw.AdvertBoard.Repository.Advert.TagRepository;
-import ppztw.AdvertBoard.Repository.ProfileRepository;
 import ppztw.AdvertBoard.Repository.UserRepository;
 
 import java.util.*;
@@ -40,8 +39,6 @@ public class AdvertUserServiceIntegrationTests {
     private TagRepository tagRepository;
     @MockBean
     private CategoryInfoRepository categoryInfoRepository;
-    @MockBean
-    private ProfileRepository profileRepository;
     @Autowired
     private AdvertUserService advertUserService;
 
@@ -71,7 +68,6 @@ public class AdvertUserServiceIntegrationTests {
         Mockito.when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Mockito.when(advertRepository.findById(advert.getId())).thenReturn(Optional.of(advert));
         Mockito.when(categoryRepository.findById(category.getId())).thenReturn(Optional.of(category));
-        Mockito.when(profileRepository.findByUserId(user.getId())).thenReturn(Optional.of(profile));
 
     }
 

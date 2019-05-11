@@ -32,7 +32,7 @@ public class UserView {
             adverts.add(new AdvertSummaryView(advert));
         this.provider = user.getProvider();
         Profile profile = user.getProfile();
-        this.profileView = profile == null ? null : new MyProfileView(profile);
+        this.profileView = profile == null ? null : new MyProfileView(user);
         this.role = user.getRole();
     }
 }

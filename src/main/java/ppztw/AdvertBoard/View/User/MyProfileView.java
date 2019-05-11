@@ -3,7 +3,7 @@ package ppztw.AdvertBoard.View.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ppztw.AdvertBoard.Model.User.Profile;
+import ppztw.AdvertBoard.Model.User.User;
 
 @Getter
 @Setter
@@ -17,11 +17,11 @@ public class MyProfileView extends ProfileSummaryView {
 
     String contactMail;
 
-    public MyProfileView(Profile profile) {
-        super(profile);
-        this.firstName = profile.getFirstName();
-        this.lastName = profile.getLastName();
-        this.telephoneNumber = profile.getTelephoneNumber();
-        this.contactMail = profile.getContactMail();
+    public MyProfileView(User user) {
+        super(user);
+        this.firstName = user.getProfile().getFirstName();
+        this.lastName = user.getProfile().getLastName();
+        this.telephoneNumber = user.getProfile().getTelephoneNumber();
+        this.contactMail = user.getProfile().getContactMail();
     }
 }

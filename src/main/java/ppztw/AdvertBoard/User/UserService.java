@@ -7,7 +7,6 @@ import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
 import ppztw.AdvertBoard.Model.User.Profile;
 import ppztw.AdvertBoard.Model.User.User;
 import ppztw.AdvertBoard.Payload.ProfileInfo;
-import ppztw.AdvertBoard.Repository.ProfileRepository;
 import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Security.UserPrincipal;
 import ppztw.AdvertBoard.Util.CategoryEntryUtils;
@@ -18,16 +17,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ProfileRepository profileRepository;
-
     @Transactional
     public void processProfile(UserPrincipal userPrincipal, ProfileInfo profileInfo) {
         User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() ->
                 new ResourceNotFoundException("User", "id", userPrincipal.getId()));
 
-        Profile profile = !profileRepository.findByUserId(userPrincipal.getId()).isPresent() ? new Profile() : user.getProfile();
-        profile.setUser(user);
+        Profile profile = user.getProfile() == null ? new Profile() : user.getProfile();
         profile.setContactMail(profileInfo.getContactMail());
         profile.setFirstName(profileInfo.getFirstName());
         profile.setLastName(profileInfo.getLastName());
@@ -38,7 +33,6 @@ public class UserService {
             user.setCategoryEntries(profileInfo.getCategoryEntries());
 
         userRepository.save(user);
-        profileRepository.save(profile);
     }
 
     public void addCategoryEntry(Long categoryId, Long userId, Double val) {
