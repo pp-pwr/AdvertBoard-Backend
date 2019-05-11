@@ -18,8 +18,6 @@ import ppztw.AdvertBoard.View.User.ProfileSummaryView;
 import ppztw.AdvertBoard.View.User.ProfileView;
 import ppztw.AdvertBoard.View.User.UserView;
 
-import javax.validation.Valid;
-
 @RestController
 public class UserController {
 
@@ -55,10 +53,12 @@ public class UserController {
 
     @GetMapping("/user/get")
     @PreAuthorize("permitAll()")
-    public ProfileView getProfile(@Valid Long profileId) {
+    public ProfileView getProfile(@RequestParam Long profileId) {
         User user = userRepository.findByProfileId(profileId)
                 .orElseThrow(() -> new ResourceNotFoundException("Profile", "id", profileId));
 
         return new ProfileView(user);
     }
+
+
 }
