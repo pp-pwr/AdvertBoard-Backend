@@ -26,7 +26,9 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
             " ORDER BY random() LIMIT :adcount", nativeQuery = true)
     List<Advert> findRandomByCategoryId(@Param("id") Long categoryId, @Param("adcount") Integer advertCount);
 
-
     Page<Advert> findAllByStatus(Pageable pageable, Advert.Status status);
 
+    @Query(value = "SELECT * FROM adverts a WHERE a.user_id = :id AND a.status IN (0, 1)" +
+            " ORDER BY a.date LIMIT :adcount", nativeQuery = true)
+    List<Advert> findByUserId(@Param("id") Long userId, @Param("adcount") Integer advertCount);
 }

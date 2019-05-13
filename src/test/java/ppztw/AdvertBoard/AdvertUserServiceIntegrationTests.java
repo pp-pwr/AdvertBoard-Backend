@@ -113,8 +113,8 @@ public class AdvertUserServiceIntegrationTests {
         Long userId = 0L;
 
         Long additionalInfoId = 1L;
-        Map<Long, String> additionalInfos = new HashMap<>();
-        additionalInfos.put(additionalInfoId, "");
+        Map<String, String> additionalInfos = new HashMap<>();
+        additionalInfos.put(additionalInfoId.toString(), "");
 
         CreateAdvertRequest request = new CreateAdvertRequest();
         request.setTitle("Title");

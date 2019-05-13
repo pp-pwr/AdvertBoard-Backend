@@ -60,6 +60,15 @@ public class AdvertService {
         return categoryIds;
     }
 
+    public List<AdvertSummaryView> getAdvertsByUserId(Long userId, Integer limit) {
+        List<AdvertSummaryView> summaryViewList = new ArrayList<>();
+        List<Advert> adverts = advertRepository.findByUserId(userId, limit);
+        for (Advert advert : adverts)
+            summaryViewList.add(new AdvertSummaryView(advert));
+
+        return summaryViewList;
+    }
+
     public Resource loadImage(Long advertId) throws MalformedURLException {
         Optional<Advert> advert = advertRepository.findById(advertId);
         Path file;

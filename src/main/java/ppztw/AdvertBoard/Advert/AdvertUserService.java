@@ -112,7 +112,7 @@ public class AdvertUserService {
     private Advert addNewAdvert(String title, List<String> tagNames, String description,
                                 MultipartFile image, Category category,
                                 User user,
-                                Map<Long, String> additionalInfo) {
+                                Map<String, String> additionalInfo) {
 
         List<Tag> tags = processTags(tagNames);
         String imagePath = "";
@@ -144,21 +144,23 @@ public class AdvertUserService {
     }
 
     private List<AdvertInfo> processAdvertInfo(Category category,
-                                               Map<Long, String> advertInfo) {
+                                               Map<String, String> advertInfo) {
         List<AdvertInfo> advertInfos = null;
         if (advertInfo != null) {
             advertInfos = new ArrayList<>();
 
             List<CategoryInfo> infoList = category.getInfoList();
-            List<Long> idList = new ArrayList<>();
+            List<String> idList = new ArrayList<>();
 
             for (CategoryInfo categoryInfo : infoList)
-                idList.add(categoryInfo.getId());
-
-            for (Map.Entry<Long, String> entry : advertInfo.entrySet()) {
-                if (!idList.contains(entry.getKey()))
+                idList.add(categoryInfo.getId().toString());
+            for (Map.Entry<String, String> entry : advertInfo.entrySet()) {
+        
+                if (!idList.contains(entry.getKey())) {
                     throw new BadRequestException("This category doesn't contain such additional info!");
-                CategoryInfo info = categoryInfoRepository.findById(entry.getKey())
+                }
+                    
+                CategoryInfo info = categoryInfoRepository.findById(Long.parseLong(entry.getKey()))
                         .orElseThrow(() -> new ResourceNotFoundException(
                                 "CategoryInfo", "id", entry.getKey()));
                 advertInfos.add(new AdvertInfo(info, entry.getValue()));

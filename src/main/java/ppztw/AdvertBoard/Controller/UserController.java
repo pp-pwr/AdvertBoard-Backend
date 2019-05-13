@@ -52,7 +52,6 @@ public class UserController {
         return userService.getAllProfileSummaryViews(pageable, nameContains);
     }
 
-
     @GetMapping("/user/get")
     @PreAuthorize("permitAll()")
     public ProfileView getProfile(@RequestParam Long profileId) {
