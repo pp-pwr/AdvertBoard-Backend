@@ -33,7 +33,8 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public UserView getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
         User user = userService.findById(userPrincipal.getId());
-        return new UserView(user);
+        Double rating = userService.getProfileRating(user.getProfile().getId());
+        return new UserView(user, rating);
 
     }
 

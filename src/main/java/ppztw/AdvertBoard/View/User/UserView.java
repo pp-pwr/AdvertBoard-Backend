@@ -23,7 +23,7 @@ public class UserView {
     private MyProfileView profileView;
     private Role role;
 
-    public UserView(User user) {
+    public UserView(User user, Double rating) {
         this.name = user.getName();
         this.email = user.getEmail();
         this.emailVerified = user.getEmailVerified();
@@ -32,7 +32,7 @@ public class UserView {
             adverts.add(new AdvertSummaryView(advert));
         this.provider = user.getProvider();
         Profile profile = user.getProfile();
-        this.profileView = profile == null ? null : new MyProfileView(user);
+        this.profileView = profile == null ? null : new MyProfileView(user, rating);
         this.role = user.getRole();
     }
 }

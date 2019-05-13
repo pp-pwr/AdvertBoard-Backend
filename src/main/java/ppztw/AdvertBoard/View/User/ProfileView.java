@@ -18,16 +18,15 @@ public class ProfileView extends MyProfileView {
 
     List<AdvertSummaryView> advertSummaryViews;
 
-    Double rating;
 
     public ProfileView(User user, Double rating) {
-        super(user);
+        super(user, rating);
         this.advertSummaryViews = new ArrayList<>();
         List<Advert> advertList = user.getAdverts();
         for (Advert advert : advertList)
             if (advert.getStatus() != Advert.Status.ARCHIVED &&
                     advert.getStatus() != Advert.Status.BANNED)
                 this.advertSummaryViews.add(new AdvertSummaryView(advert));
-        this.rating = rating;
+
     }
 }
