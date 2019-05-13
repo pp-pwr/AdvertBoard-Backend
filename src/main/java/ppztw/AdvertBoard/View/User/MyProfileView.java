@@ -17,11 +17,15 @@ public class MyProfileView extends ProfileSummaryView {
 
     String contactMail;
 
-    public MyProfileView(User user) {
+
+    Double rating;
+
+    public MyProfileView(User user, Double rating) {
         super(user);
         this.firstName = user.getProfile().getFirstName();
         this.lastName = user.getProfile().getLastName();
         this.telephoneNumber = user.getProfile().getTelephoneNumber();
         this.contactMail = user.getProfile().getContactMail();
+        this.rating = rating;
     }
 }
