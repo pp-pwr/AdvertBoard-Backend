@@ -11,8 +11,9 @@ spring:
     password:
     username:
     initialization-mode: never
+    hikari:
+      schema: dbo
   jpa:
-    schema: dbo
     database: H2
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
