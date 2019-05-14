@@ -51,7 +51,7 @@ public class User {
 
     private String providerId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Profile profile;
 
     @ElementCollection

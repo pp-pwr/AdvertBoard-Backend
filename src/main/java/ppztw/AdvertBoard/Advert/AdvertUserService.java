@@ -1,18 +1,14 @@
 package ppztw.AdvertBoard.Advert;
 
 
-import org.apache.commons.io.IOUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import ppztw.AdvertBoard.Exception.BadRequestException;
 import ppztw.AdvertBoard.Exception.IncorrectFileException;
 import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
 import ppztw.AdvertBoard.Model.Advert.*;
-import ppztw.AdvertBoard.Model.User.Profile;
 import ppztw.AdvertBoard.Model.User.User;
 import ppztw.AdvertBoard.Payload.Advert.CreateAdvertRequest;
 import ppztw.AdvertBoard.Payload.Advert.EditAdvertRequest;
@@ -21,7 +17,6 @@ import ppztw.AdvertBoard.Repository.Advert.AdvertRepository;
 import ppztw.AdvertBoard.Repository.Advert.CategoryInfoRepository;
 import ppztw.AdvertBoard.Repository.Advert.CategoryRepository;
 import ppztw.AdvertBoard.Repository.Advert.TagRepository;
-import ppztw.AdvertBoard.Repository.ProfileRepository;
 import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Util.CategoryEntryUtils;
 import ppztw.AdvertBoard.Util.StatisticsUtils;
@@ -53,9 +48,6 @@ public class AdvertUserService {
     @Autowired
     private AdvertRepository advertRepository;
 
-    @Autowired
-    private ProfileRepository profileRepository;
-
     public Optional<Advert> findAdvert(Long userId, Long id) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("User", "id", userId));
@@ -76,8 +68,6 @@ public class AdvertUserService {
     public void addAdvert(Long userId, CreateAdvertRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("User", "id", userId));
-        Profile profile = profileRepository.findByUserId(userId).orElseThrow(() ->
-                new BadRequestException("Musisz posiadać publiczny profil, aby dodawać ogłoszenia"));
         Category category = categoryRepository.findById(request.getCategory())
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id",
                         request.getCategory()));
@@ -122,18 +112,17 @@ public class AdvertUserService {
     private Advert addNewAdvert(String title, List<String> tagNames, String description,
                                 MultipartFile image, Category category,
                                 User user,
-                                Map<Long, String> additionalInfo) {
+                                Map<String, String> additionalInfo) {
 
         List<Tag> tags = processTags(tagNames);
-        //Image img = processImage(imagePayload);
-
-        String imagePath;
-        try {
-            imagePath = saveImage(user.getId(), image);
-        } catch (Exception e) {
-            throw new IncorrectFileException(image != null ? image.getOriginalFilename() : null, e);
+        String imagePath = "";
+        if (image != null) {
+            try {
+                imagePath = saveImage(user.getId(), image);
+            } catch (Exception e) {
+                throw new IncorrectFileException(image != null ? image.getOriginalFilename() : null, e);
+            }
         }
-
         List<AdvertInfo> advertInfos = processAdvertInfo(category, additionalInfo);
 
         return advertRepository
@@ -155,21 +144,23 @@ public class AdvertUserService {
     }
 
     private List<AdvertInfo> processAdvertInfo(Category category,
-                                               Map<Long, String> advertInfo) {
+                                               Map<String, String> advertInfo) {
         List<AdvertInfo> advertInfos = null;
         if (advertInfo != null) {
             advertInfos = new ArrayList<>();
 
             List<CategoryInfo> infoList = category.getInfoList();
-            List<Long> idList = new ArrayList<>();
+            List<String> idList = new ArrayList<>();
 
             for (CategoryInfo categoryInfo : infoList)
-                idList.add(categoryInfo.getId());
-
-            for (Map.Entry<Long, String> entry : advertInfo.entrySet()) {
-                if (!idList.contains(entry.getKey()))
+                idList.add(categoryInfo.getId().toString());
+            for (Map.Entry<String, String> entry : advertInfo.entrySet()) {
+        
+                if (!idList.contains(entry.getKey())) {
                     throw new BadRequestException("This category doesn't contain such additional info!");
-                CategoryInfo info = categoryInfoRepository.findById(entry.getKey())
+                }
+                    
+                CategoryInfo info = categoryInfoRepository.findById(Long.parseLong(entry.getKey()))
                         .orElseThrow(() -> new ResourceNotFoundException(
                                 "CategoryInfo", "id", entry.getKey()));
                 advertInfos.add(new AdvertInfo(info, entry.getValue()));

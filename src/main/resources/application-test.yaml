@@ -2,22 +2,26 @@ server:
   servlet:
     contextPath: /api
 spring:
+  application:
+    name: AdvertBoard
   datasource:
-    url: jdbc:postgresql://packy.db.elephantsql.com:5432/rmyrrehv
-    username: rmyrrehv
-    password: NVnTV7vfed0K-W7uGFD7ZmRIX1Z7MjRn
-
+    type: com.zaxxer.hikari.HikariDataSource
+    url: "jdbc:h2:mem:test-api;INIT=CREATE SCHEMA IF NOT EXISTS dbo\\;CREATE SCHEMA IF NOT EXISTS definitions;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;MODE=MSSQLServer"
+    name:
+    password:
+    username:
+    initialization-mode: never
+    hikari:
+      schema: dbo
   jpa:
-    database: postgresql
-    dialect: org.hibernate.dialect.PostgreSQL9Dialect
+    database: H2
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
     hibernate:
-      ddl-auto: update
-      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-    properties:
-      hibernate:
-        jdbc:
-          lob:
-            non_contextual_creation: true
+      ddl-auto: create-drop
+  test:
+    database:
+      replace: none
 
   servlet:
     multipart:

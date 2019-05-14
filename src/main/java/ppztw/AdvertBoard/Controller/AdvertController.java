@@ -64,7 +64,7 @@ public class AdvertController {
                                        @Valid @RequestParam("tags") @Nullable List<String> tags,
                                        @Valid @RequestParam("description") @NotBlank String description,
                                        @Valid @RequestParam("category") @NotNull Long category,
-                                       @Valid @RequestParam("additionalInfo") @Nullable Map<Long, String> additionalInfo,
+                                       @Valid @RequestParam("additionalInfo") @Nullable Map<String, String> additionalInfo,
                                        @Valid @RequestParam("imageFile") @Nullable MultipartFile imageFile) {
 
         CreateAdvertRequest createAdvertRequest = new CreateAdvertRequest();
@@ -110,6 +110,16 @@ public class AdvertController {
             userService.addCategoryEntry(advert.getCategory().getId(), userPrincipal.getId(), 0.01);
         }
         return new AdvertDetailsView(advert);
+    }
+
+    @GetMapping("/last")
+    @PreAuthorize("permitAll()")
+    public List<AdvertSummaryView> getLastUserAdverts(
+            @CurrentUser UserPrincipal userPrincipal, 
+            @RequestParam Long userId, 
+            @RequestParam Integer limit) {
+        
+        return advertService.getAdvertsByUserId(userId, limit);
     }
 
     @GetMapping("/browse")

@@ -30,6 +30,6 @@ public class EditAdvertRequest {
     private MultipartFile imageFile;
 
     @Nullable
-    private Map<Long, String> additionalInfo;
+    private Map<String, String> additionalInfo;
 
 }

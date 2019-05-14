@@ -37,5 +37,5 @@ public class CreateAdvertRequest {
     private MultipartFile imageFile;
 
     @Nullable
-    private Map<Long, String> additionalInfo;
+    private Map<String, String> additionalInfo;
 }
