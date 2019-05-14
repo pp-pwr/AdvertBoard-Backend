@@ -22,8 +22,7 @@ public class TagRepositoryTests {
     private TagRepository tagRepository;
 
     @Autowired
-    private
-    TestEntityManager entityManager;
+    private TestEntityManager entityManager;
 
     @Before
     public void setUp() {
