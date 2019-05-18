@@ -1,4 +1,4 @@
-package ppztw.AdvertBoard.Model;
+package ppztw.AdvertBoard.Model.User;
 
 public enum AuthProvider {
     local,

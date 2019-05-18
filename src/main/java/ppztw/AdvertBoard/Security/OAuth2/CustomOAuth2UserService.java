@@ -10,8 +10,9 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.util.StringUtils;
 import ppztw.AdvertBoard.Exception.OAuth2AuthenticationProcessingException;
-import ppztw.AdvertBoard.Model.AuthProvider;
-import ppztw.AdvertBoard.Model.User;
+import ppztw.AdvertBoard.Model.User.AuthProvider;
+import ppztw.AdvertBoard.Model.User.Profile;
+import ppztw.AdvertBoard.Model.User.User;
 import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Security.OAuth2.User.OAuth2UserInfo;
 import ppztw.AdvertBoard.Security.OAuth2.User.OAuth2UserInfoFactory;
@@ -68,6 +69,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
+        Profile profile = new Profile();
+        profile.setVisibleName(oAuth2UserInfo.getName());
+        user.setProfile(profile);
         return userRepository.save(user);
     }
 

@@ -2,6 +2,7 @@ package ppztw.AdvertBoard.View.Advert;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.core.io.Resource;
 import ppztw.AdvertBoard.Model.Advert.Advert;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class AdvertSummaryView {
     public AdvertSummaryView(Advert advert) {
         this.id = advert.getId();
         this.title = advert.getTitle();
-        this.pic = advert.getBase64();
+        this.pic = advert.getImagePath();
         this.date = advert.getDate();
         recommended = false;
     }

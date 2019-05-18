@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
-import ppztw.AdvertBoard.Model.User;
+import ppztw.AdvertBoard.Model.User.User;
 import ppztw.AdvertBoard.Repository.UserRepository;
 
 @Service

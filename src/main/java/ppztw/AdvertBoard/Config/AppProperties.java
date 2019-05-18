@@ -1,6 +1,8 @@
 package ppztw.AdvertBoard.Config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import java.util.ArrayList;
 import java.util.List;

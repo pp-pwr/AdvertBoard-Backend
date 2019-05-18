@@ -3,14 +3,13 @@ package ppztw.AdvertBoard.Advert;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ppztw.AdvertBoard.Exception.BadRequestException;
+import ppztw.AdvertBoard.Exception.IncorrectFileException;
 import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
 import ppztw.AdvertBoard.Model.Advert.*;
-import ppztw.AdvertBoard.Model.Profile;
-import ppztw.AdvertBoard.Model.User;
+import ppztw.AdvertBoard.Model.User.User;
 import ppztw.AdvertBoard.Payload.Advert.CreateAdvertRequest;
 import ppztw.AdvertBoard.Payload.Advert.EditAdvertRequest;
 import ppztw.AdvertBoard.Payload.Advert.ImagePayload;
@@ -18,14 +17,18 @@ import ppztw.AdvertBoard.Repository.Advert.AdvertRepository;
 import ppztw.AdvertBoard.Repository.Advert.CategoryInfoRepository;
 import ppztw.AdvertBoard.Repository.Advert.CategoryRepository;
 import ppztw.AdvertBoard.Repository.Advert.TagRepository;
-import ppztw.AdvertBoard.Repository.ProfileRepository;
 import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Util.CategoryEntryUtils;
-import ppztw.AdvertBoard.Util.PageUtils;
+import ppztw.AdvertBoard.Util.StatisticsUtils;
 import ppztw.AdvertBoard.View.Advert.AdvertSummaryView;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AdvertUserService {
@@ -45,9 +48,6 @@ public class AdvertUserService {
     @Autowired
     private AdvertRepository advertRepository;
 
-    @Autowired
-    private ProfileRepository profileRepository;
-
     public Optional<Advert> findAdvert(Long userId, Long id) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("User", "id", userId));
@@ -57,7 +57,7 @@ public class AdvertUserService {
             if (adv.getId().equals(id)) {
                 advert = adv;
                 user.setCategoryEntries(
-                        CategoryEntryUtils.addEntryValue(advert.getSubcategory().getId(), user, 0.01));
+                        CategoryEntryUtils.addEntryValue(advert.getCategory().getId(), user, 0.01));
                 userRepository.save(user);
                 break;
             }
@@ -68,21 +68,16 @@ public class AdvertUserService {
     public void addAdvert(Long userId, CreateAdvertRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("User", "id", userId));
-        Profile profile = profileRepository.findByUserId(userId).orElseThrow(() ->
-                new BadRequestException("Musisz posiadać publiczny profil, aby dodawać ogłoszenia"));
         Category category = categoryRepository.findById(request.getCategory())
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id",
                         request.getCategory()));
 
         List<Advert> advertList = user.getAdverts() == null ? new ArrayList<Advert>() : user.getAdverts();
         Advert advert = addNewAdvert(request.getTitle(), request.getTags(), request.getDescription(),
-                request.getImage(), category, user, request.getAdditionalInfo());
+                request.getImageFile(), category, user, request.getAdditionalInfo());
         advertList.add(advert);
         user.setAdverts(advertList);
-        category.addAdvert(advert);
-
         userRepository.save(user);
-        categoryRepository.save(category);
 
     }
 
@@ -90,68 +85,48 @@ public class AdvertUserService {
         Advert advert = findAdvert(userId, request.getId()).orElseThrow(() ->
                 new ResourceNotFoundException("Advert", "id", request.getId()));
 
+        String imagePath;
+        
+        try {
+            imagePath = saveImage(userId, request.getImageFile());
+        } catch (Exception e) {
+            throw new IncorrectFileException(request.getImageFile() != null ? request.getImageFile().getOriginalFilename() : null, e);
+        }
+    
         advert.setTitle(request.getTitle() == null ? advert.getTitle() : request.getTitle());
         advert.setTags(request.getTags() == null ? advert.getTags() : processTags(request.getTags()));
         advert.setDescription(request.getDescription() == null ?
                 advert.getDescription() : request.getDescription());
-        advert.setImage(request.getImage() == null ? advert.getImage() :
-                processImage(request.getImage()));
+        // advert.setImage(request.getImage() == null ? advert.getImage() :
+        //         processImage(request.getImage()));
+        advert.setImagePath(imagePath == null ? advert.getImagePath() : imagePath);
         advert.setAdditionalInfo(request.getAdditionalInfo() == null ?
                 advert.getAdditionalInfo() :
-                processAdvertInfo(advert.getSubcategory(), request.getAdditionalInfo()));
+                processAdvertInfo(advert.getCategory(), request.getAdditionalInfo()));
 
         advert.setStatus(Advert.Status.EDITED);
         advertRepository.save(advert);
     }
 
-    public List<Advert> getRecommendedAdvertList(User user, List<Advert> advertList, Integer pageSize) {
-        Map<Long, Double> categoryEntries = user.getCategoryEntries();
-        List<Advert> recommendedAdverts = new ArrayList<>();
-        int recommendedAdvertLimit = pageSize / 2;
-        Integer recommendedAdvertSize = recommendedAdvertLimit;
-
-        if (categoryEntries != null) {
-            for (Map.Entry<Long, Double> entry : categoryEntries.entrySet()) {
-                Long catId = entry.getKey();
-                Double val = entry.getValue();
-                int categoryLimit = (int) Math.round(val * recommendedAdvertSize.doubleValue());
-                List<Advert> catAdverts = filterByCategoryId(advertList, catId);
-                Collections.shuffle(catAdverts);
-                if (categoryLimit > 0) {
-                    if (catAdverts.size() > categoryLimit)
-                        catAdverts = catAdverts.subList(0, categoryLimit - 1);
-                }
-                if (recommendedAdvertLimit > 0) {
-                    int newLimit = recommendedAdvertLimit - categoryLimit;
-                    recommendedAdverts.addAll(catAdverts);
-                    if (newLimit <= 0)
-                        break;
-                    recommendedAdvertLimit = newLimit;
-                }
-            }
-        }
-        recommendedAdverts.addAll(advertList);
-        return recommendedAdverts;
-    }
-
-    private List<Advert> filterByCategoryId(List<Advert> advertList, Long categoryId) {
-        return advertList.stream()
-                .filter(advert -> advert.getSubcategory().getId().equals(categoryId))
-                .collect(Collectors.toList());
-    }
-
 
     private Advert addNewAdvert(String title, List<String> tagNames, String description,
-                                ImagePayload imagePayload, Category category,
+                                MultipartFile image, Category category,
                                 User user,
-                                Map<Long, String> additionalInfo) {
+                                Map<String, String> additionalInfo) {
 
         List<Tag> tags = processTags(tagNames);
-        Image img = processImage(imagePayload);
+        String imagePath = "";
+        if (image != null) {
+            try {
+                imagePath = saveImage(user.getId(), image);
+            } catch (Exception e) {
+                throw new IncorrectFileException(image != null ? image.getOriginalFilename() : null, e);
+            }
+        }
         List<AdvertInfo> advertInfos = processAdvertInfo(category, additionalInfo);
 
         return advertRepository
-                .save(new Advert(title, tags, description, img, category, user, advertInfos));
+                .save(new Advert(title, tags, description, imagePath, category, user, advertInfos));
     }
 
 
@@ -169,21 +144,23 @@ public class AdvertUserService {
     }
 
     private List<AdvertInfo> processAdvertInfo(Category category,
-                                               Map<Long, String> advertInfo) {
+                                               Map<String, String> advertInfo) {
         List<AdvertInfo> advertInfos = null;
         if (advertInfo != null) {
             advertInfos = new ArrayList<>();
 
             List<CategoryInfo> infoList = category.getInfoList();
-            List<Long> idList = new ArrayList<>();
+            List<String> idList = new ArrayList<>();
 
             for (CategoryInfo categoryInfo : infoList)
-                idList.add(categoryInfo.getId());
-
-            for (Map.Entry<Long, String> entry : advertInfo.entrySet()) {
-                if (!idList.contains(entry.getKey()))
+                idList.add(categoryInfo.getId().toString());
+            for (Map.Entry<String, String> entry : advertInfo.entrySet()) {
+        
+                if (!idList.contains(entry.getKey())) {
                     throw new BadRequestException("This category doesn't contain such additional info!");
-                CategoryInfo info = categoryInfoRepository.findById(entry.getKey())
+                }
+                    
+                CategoryInfo info = categoryInfoRepository.findById(Long.parseLong(entry.getKey()))
                         .orElseThrow(() -> new ResourceNotFoundException(
                                 "CategoryInfo", "id", entry.getKey()));
                 advertInfos.add(new AdvertInfo(info, entry.getValue()));
@@ -198,20 +175,33 @@ public class AdvertUserService {
     }
 
 
-    public Page<AdvertSummaryView> getPage(List<Advert> adverts, int recommendedSize, Pageable pageable) {
+    public List<AdvertSummaryView> getRecommendedAdverts(Long userId, Long advertCount) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResourceNotFoundException("User", "id", userId));
+        List<AdvertSummaryView> advertSummaryViews = new ArrayList<>();
+        if (user.getCategoryEntries() != null)
+            for (Map.Entry<Long, Double> entry :
+                    StatisticsUtils.normalizeIntoDistribution(user.getCategoryEntries()).entrySet()) {
 
-        PageUtils<AdvertSummaryView> pageUtils = new PageUtils<>();
-
-        List<AdvertSummaryView> advertViews = new ArrayList<>();
-
-        for (int i = 0; i < adverts.size(); i++) {
-            AdvertSummaryView advertView = new AdvertSummaryView(adverts.get(i));
-            if (i < recommendedSize)
-                advertView.setRecommended(true);
-            advertViews.add(advertView);
-        }
-
-        return pageUtils.getPage(advertViews, pageable);
+                List<Advert> adverts = advertRepository.findRandomByCategoryId(entry.getKey(),
+                        Math.toIntExact(Math.round(entry.getValue() * advertCount.doubleValue())));
+                for (Advert advert : adverts) {
+                    AdvertSummaryView view = new AdvertSummaryView(advert);
+                    view.setRecommended(true);
+                    advertSummaryViews.add(view);
+                }
+            }
+        return advertSummaryViews;
     }
 
+    public String saveImage(Long userId, MultipartFile image) throws Exception {
+        String destinationFolder = "./images/user/" + userId + "/photos";
+        byte[] bytes = image.getBytes();
+        Path path = Paths.get(String.format("%s/%s_%s", destinationFolder, image.hashCode(), image.getOriginalFilename()));
+        Files.createDirectories(path.getParent());
+        Files.createFile(path);
+        Files.write(path, bytes);
+
+        return path.toString();
+    }
 }

@@ -34,22 +34,18 @@ public class Category {
     @JsonManagedReference
     private List<Category> subcategories;
 
-    @OneToMany
-    private List<Advert> adverts;
-
     @OneToMany(cascade = CascadeType.ALL)
     private List<CategoryInfo> infoList;
 
-    public void addAdvert(Advert advert) {
-        adverts.add(advert);
-    }
-
-    public List<Advert> getAdverts() {
-        List<Advert> advertList = new ArrayList<>();
-        advertList.addAll(adverts);
-        for (Category subcategory : subcategories)
-            advertList.addAll(subcategory.getAdverts());
-        return advertList;
+    public List<Category> getAllSubcategories() {
+        List<Category> result = new ArrayList<>();
+        if (subcategories != null) {
+            result.addAll(subcategories);
+            for (Category subcategory : subcategories)
+                if (subcategory != null)
+                    result.addAll(subcategory.getAllSubcategories());
+        }
+        return result;
     }
 
     public List<CategoryInfo> getInfoList() {

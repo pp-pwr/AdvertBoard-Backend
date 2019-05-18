@@ -1,6 +1,6 @@
 package ppztw.AdvertBoard.Util;
 
-import ppztw.AdvertBoard.Model.User;
+import ppztw.AdvertBoard.Model.User.User;
 
 import java.util.HashMap;
 import java.util.Map;

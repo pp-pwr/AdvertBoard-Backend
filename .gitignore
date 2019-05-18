@@ -31,4 +31,7 @@ HELP.md
 ## Linux ##
 .attach_pid*
 
+## Images ##
+/images/user/
+
 application.yaml

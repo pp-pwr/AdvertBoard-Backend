@@ -1,4 +1,4 @@
-package ppztw.AdvertBoard.Model;
+package ppztw.AdvertBoard.Model.User;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -51,10 +51,12 @@ public class User {
 
     private String providerId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Profile profile;
 
     @ElementCollection
     private Map<Long, Double> categoryEntries;
+
+    private Role role = Role.user;
 
 }

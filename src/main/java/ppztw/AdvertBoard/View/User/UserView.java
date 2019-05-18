@@ -3,9 +3,10 @@ package ppztw.AdvertBoard.View.User;
 import lombok.Getter;
 import lombok.Setter;
 import ppztw.AdvertBoard.Model.Advert.Advert;
-import ppztw.AdvertBoard.Model.AuthProvider;
-import ppztw.AdvertBoard.Model.Profile;
-import ppztw.AdvertBoard.Model.User;
+import ppztw.AdvertBoard.Model.User.AuthProvider;
+import ppztw.AdvertBoard.Model.User.Profile;
+import ppztw.AdvertBoard.Model.User.Role;
+import ppztw.AdvertBoard.Model.User.User;
 import ppztw.AdvertBoard.View.Advert.AdvertSummaryView;
 
 import java.util.ArrayList;
@@ -20,8 +21,9 @@ public class UserView {
     private List<AdvertSummaryView> adverts;
     private AuthProvider provider;
     private MyProfileView profileView;
+    private Role role;
 
-    public UserView(User user) {
+    public UserView(User user, Double rating) {
         this.name = user.getName();
         this.email = user.getEmail();
         this.emailVerified = user.getEmailVerified();
@@ -30,6 +32,7 @@ public class UserView {
             adverts.add(new AdvertSummaryView(advert));
         this.provider = user.getProvider();
         Profile profile = user.getProfile();
-        this.profileView = profile == null ? null : new MyProfileView(profile);
+        this.profileView = profile == null ? null : new MyProfileView(user, rating);
+        this.role = user.getRole();
     }
 }

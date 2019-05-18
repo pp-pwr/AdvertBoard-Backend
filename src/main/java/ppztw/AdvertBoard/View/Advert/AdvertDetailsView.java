@@ -34,8 +34,8 @@ public class AdvertDetailsView extends AdvertSummaryView {
         this.profileName = advert.getUser().getProfile() != null ?
                 advert.getUser().getProfile().getVisibleName() : null;
         this.description = advert.getDescription();
-        this.categoryId = advert.getSubcategory().getId();
-        this.categoryName = advert.getSubcategory().getCategoryName();
+        this.categoryId = advert.getCategory().getId();
+        this.categoryName = advert.getCategory().getCategoryName();
         this.tags = new ArrayList<>();
         this.additionalInfo = new HashMap<>();
         this.status = advert.getStatus();

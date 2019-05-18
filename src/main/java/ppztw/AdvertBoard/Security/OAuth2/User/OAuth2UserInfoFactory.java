@@ -1,7 +1,7 @@
 package ppztw.AdvertBoard.Security.OAuth2.User;
 
 import ppztw.AdvertBoard.Exception.OAuth2AuthenticationProcessingException;
-import ppztw.AdvertBoard.Model.AuthProvider;
+import ppztw.AdvertBoard.Model.User.AuthProvider;
 
 import java.util.Map;
 

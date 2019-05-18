@@ -125,6 +125,6 @@ method: GET
 ```
 path: /category/get
 method: GET
-request param: categoryName, page, limit, sort, maxDate, minDate, titleContains
+request param: categoryName, page, limit, sort, titleContains
 ```
 
