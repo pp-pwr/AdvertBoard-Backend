@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,6 +15,8 @@ import ppztw.AdvertBoard.Model.Stats.AdvertStats;
 import ppztw.AdvertBoard.Repository.Advert.AdvertStatsRepository;
 import ppztw.AdvertBoard.Stats.StatsService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,8 +33,20 @@ public class StatsServiceTests {
 
     @Before
     public void setUp() {
-        AdvertStats advertStats = new AdvertStats(0L, null, 0);
-        Mockito.when(advertStatsRepository.findById(0L)).thenReturn(Optional.of(advertStats));
+        List<AdvertStats> statsList = new ArrayList<>();
+        for (long i = 0L; i < 10; i++) {
+            AdvertStats advertStats = new AdvertStats(i, null, 0, false);
+            Mockito.when(advertStatsRepository.findById(i)).thenReturn(Optional.of(advertStats));
+            statsList.add(advertStats);
+        }
+        Mockito.when(advertStatsRepository.countReportedAdverts()).thenAnswer((Answer<Integer>) invocationOnMock -> {
+            int count = 0;
+            for (AdvertStats stats : statsList)
+                if (stats.isReported())
+                    count++;
+            return count;
+        });
+
     }
 
     @Test
@@ -49,6 +64,17 @@ public class StatsServiceTests {
         Integer afterEntryCount = statsService.getAdvertEntryCount(advertId);
 
         assertThat(afterEntryCount).isEqualTo(beforeEntryCount + 1);
+    }
+
+    @Test
+    public void setAdvertReported_ShouldIncreaseReportedAdvertsCount() {
+        Long advertId = 0L;
+        Integer beforeCount = statsService.getReportedAdvertsCount();
+        statsService.setAdvertReported(advertId);
+        Integer afterCount = statsService.getReportedAdvertsCount();
+
+        assertThat(afterCount).isEqualTo(beforeCount + 1);
+
     }
 
     @TestConfiguration

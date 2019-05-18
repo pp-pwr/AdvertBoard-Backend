@@ -24,6 +24,16 @@ public class StatsService {
         return advertStats.getEntryCount();
     }
 
+    public void setAdvertReported(Long advertId) {
+        AdvertStats advertStats = findAdvertStatsById(advertId);
+        advertStats.setReported(true);
+        advertStatsRepository.save(advertStats);
+    }
+
+    public Integer getReportedAdvertsCount() {
+        return advertStatsRepository.countReportedAdverts();
+    }
+
 
     private AdvertStats findAdvertStatsById(Long advertId) {
         return advertStatsRepository.findById(advertId).orElseThrow(() ->

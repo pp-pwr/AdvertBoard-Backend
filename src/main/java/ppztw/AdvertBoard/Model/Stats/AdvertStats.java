@@ -23,8 +23,11 @@ public class AdvertStats implements Serializable {
 
     private Integer entryCount;
 
+    private boolean isReported;
+
     public AdvertStats() {
         entryCount = 0;
+        isReported = false;
     }
 
 
