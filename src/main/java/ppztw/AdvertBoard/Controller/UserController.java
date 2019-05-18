@@ -34,7 +34,8 @@ public class UserController {
     public UserView getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
         User user = userService.findById(userPrincipal.getId());
         Double rating = userService.getProfileRating(user.getProfile().getId());
-        return new UserView(user, rating);
+        Integer ratingCount = userService.getProfileRatingCount(user.getProfile().getId());
+        return new UserView(user, rating, ratingCount);
 
     }
 

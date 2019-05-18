@@ -13,15 +13,22 @@ import ppztw.AdvertBoard.Model.User.CaseStatus;
 import ppztw.AdvertBoard.Payload.ApiResponse;
 import ppztw.AdvertBoard.Security.CurrentUser;
 import ppztw.AdvertBoard.Security.UserPrincipal;
+import ppztw.AdvertBoard.Stats.StatsService;
 import ppztw.AdvertBoard.View.Advert.AdvertSummaryView;
+import ppztw.AdvertBoard.View.ReportStatsView;
 import ppztw.AdvertBoard.View.ReportView;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
 
     @Autowired
-    AdminService adminService;
+    private AdminService adminService;
+
+    @Autowired
+    private StatsService statsService;
 
     @GetMapping("/report/all")
     @PreAuthorize("hasRole('ADMIN')")
@@ -37,6 +44,26 @@ public class AdminController {
 
         return adminService.getAllReportsByCaseStatus(caseStatus, pageable);
     }
+
+    @GetMapping("/report/stats")
+    @PreAuthorize("hasRole('ADMIN')")
+    ReportStatsView getReportStats(@CurrentUser UserPrincipal userPrincipal,
+                                   @RequestParam Integer year,
+                                   @RequestParam Integer monthFrom,
+                                   @RequestParam Integer monthTo) {
+        ReportStatsView reportStatsView = new ReportStatsView();
+        reportStatsView.setAllReportedAdvertsCount(statsService.getReportedAdvertsCount());
+        reportStatsView.setTodayAdvertReportsCount(
+                statsService.getAdvertReportsCountByDate(LocalDate.now()));
+        reportStatsView.setTodayReportedAdvertsCount(
+                statsService.getReportedAdvertsCountByDate(LocalDate.now()));
+        reportStatsView.setMonthAdvertReportsCount(
+                statsService.getAdvertReportsCountInYearBetweenMonths(year, monthFrom, monthTo));
+        reportStatsView.setMonthReportedAdvertsCount(
+                statsService.getReportedAdvertsCountInYearBetweenMonths(year, monthFrom, monthTo));
+        return reportStatsView;
+    }
+
 
     @PostMapping("/report/status")
     @PreAuthorize("hasRole('ADMIN')")

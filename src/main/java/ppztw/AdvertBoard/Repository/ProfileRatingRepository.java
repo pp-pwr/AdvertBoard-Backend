@@ -12,6 +12,9 @@ public interface ProfileRatingRepository extends JpaRepository<ProfileRating, Lo
     @Query("SELECT AVG(pr.rating) FROM #{#entityName} pr WHERE pr.ratedId = :id")
     Double getProfileRating(@Param("id") Long profileId);
 
+    @Query("SELECT COUNT(pr.rating) FROM #{#entityName} pr WHERE pr.ratedId = :id")
+    Integer getProfileRatingCount(@Param("id") Long profileId);
+
     Optional<ProfileRating> findByRatingIdAndRatedId(Long ratingId, Long ratedId);
 
 }

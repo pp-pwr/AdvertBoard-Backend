@@ -23,6 +23,7 @@ import ppztw.AdvertBoard.Repository.Advert.AdvertRepository;
 import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Security.CurrentUser;
 import ppztw.AdvertBoard.Security.UserPrincipal;
+import ppztw.AdvertBoard.Stats.StatsService;
 import ppztw.AdvertBoard.User.UserService;
 import ppztw.AdvertBoard.View.Advert.AdvertDetailsView;
 import ppztw.AdvertBoard.View.Advert.AdvertSummaryView;
@@ -55,6 +56,9 @@ public class AdvertController {
 
     @Autowired
     private ReportService reportService;
+
+    @Autowired
+    private StatsService statsService;
 
     @PostMapping(value = "/add")
     @PreAuthorize("hasRole('USER')")
@@ -106,9 +110,11 @@ public class AdvertController {
     public AdvertDetailsView getAdvert(@CurrentUser UserPrincipal userPrincipal, @RequestParam Long id) {
         Advert advert = advertRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Advert", "id", id));
-        if (userPrincipal != null) {
+        if (userPrincipal != null)
             userService.addCategoryEntry(advert.getCategory().getId(), userPrincipal.getId(), 0.01);
-        }
+        statsService.addAdvertEntry(id);
+
+
         return new AdvertDetailsView(advert);
     }
 
@@ -148,6 +154,7 @@ public class AdvertController {
     public ResponseEntity<?> reportAdvert(@CurrentUser UserPrincipal userPrincipal,
                                           @Valid @RequestBody ReportAdvertRequest request) {
         reportService.addReport(userPrincipal.getId(), request.getAdvertId(), request.getComment());
+        statsService.setAdvertReported(request.getAdvertId());
         return ResponseEntity.ok(new ApiResponse(true, "Report added"));
     }
 
