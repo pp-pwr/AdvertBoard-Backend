@@ -10,7 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import ppztw.AdvertBoard.Model.Advert.AdvertStats;
+import ppztw.AdvertBoard.Model.Stats.AdvertStats;
 import ppztw.AdvertBoard.Repository.Advert.AdvertStatsRepository;
 import ppztw.AdvertBoard.Stats.StatsService;
 

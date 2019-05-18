@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import ppztw.AdvertBoard.Model.Stats.AdvertStats;
 import ppztw.AdvertBoard.Model.User.User;
 
 import javax.persistence.*;

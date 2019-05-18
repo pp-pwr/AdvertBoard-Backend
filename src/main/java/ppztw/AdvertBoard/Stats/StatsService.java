@@ -4,7 +4,7 @@ package ppztw.AdvertBoard.Stats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
-import ppztw.AdvertBoard.Model.Advert.AdvertStats;
+import ppztw.AdvertBoard.Model.Stats.AdvertStats;
 import ppztw.AdvertBoard.Repository.Advert.AdvertStatsRepository;
 
 @Service
