@@ -35,7 +35,7 @@ public class StatsServiceTests {
     public void setUp() {
         List<AdvertStats> statsList = new ArrayList<>();
         for (long i = 0L; i < 10; i++) {
-            AdvertStats advertStats = new AdvertStats(i, null, 0, false);
+            AdvertStats advertStats = new AdvertStats(i, null, 0, 0);
             Mockito.when(advertStatsRepository.findById(i)).thenReturn(Optional.of(advertStats));
             statsList.add(advertStats);
         }
@@ -74,7 +74,16 @@ public class StatsServiceTests {
         Integer afterCount = statsService.getReportedAdvertsCount();
 
         assertThat(afterCount).isEqualTo(beforeCount + 1);
+    }
 
+    @Test
+    public void setAdvertReported_ShouldIncreaseReportCount() {
+        Long advertId = 0L;
+        Integer beforeCount = statsService.getAdvertReportCount(advertId);
+        statsService.setAdvertReported(advertId);
+        Integer afterCount = statsService.getAdvertReportCount(advertId);
+
+        assertThat(afterCount).isEqualTo(beforeCount + 1);
     }
 
     @TestConfiguration

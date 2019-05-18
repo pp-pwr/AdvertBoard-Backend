@@ -8,7 +8,7 @@ import ppztw.AdvertBoard.Model.Stats.AdvertStats;
 @Repository
 public interface AdvertStatsRepository extends JpaRepository<AdvertStats, Long> {
 
-    @Query("SELECT COUNT(a) FROM #{#entityName} a WHERE a.isReported = TRUE")
+    @Query("SELECT COUNT(a) FROM #{#entityName} a WHERE a.reportCount > 0")
     Integer countReportedAdverts();
 
 }
