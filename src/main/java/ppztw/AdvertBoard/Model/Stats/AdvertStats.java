@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 import ppztw.AdvertBoard.Model.Advert.Advert;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 
 @Entity
 @Getter
@@ -13,7 +16,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class AdvertStats {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @MapsId
