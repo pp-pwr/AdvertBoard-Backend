@@ -81,8 +81,10 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Profile", "id", profileId));
 
         Double rating = getProfileRating(user.getProfile().getId());
+        Integer ratingCount = getProfileRatingCount(user.getProfile().getId());
 
-        return new ProfileView(user, rating);
+
+        return new ProfileView(user, rating, ratingCount);
     }
 
 
@@ -102,5 +104,8 @@ public class UserService {
         return profileRatingRepository.getProfileRating(profileId);
     }
 
+    public Integer getProfileRatingCount(Long profileId) {
+        return profileRatingRepository.getProfileRatingCount(profileId);
+    }
 
 }
