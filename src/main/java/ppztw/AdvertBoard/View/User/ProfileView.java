@@ -19,8 +19,8 @@ public class ProfileView extends MyProfileView {
     List<AdvertSummaryView> advertSummaryViews;
 
 
-    public ProfileView(User user, Double rating) {
-        super(user, rating);
+    public ProfileView(User user, Double rating, Integer ratingCount) {
+        super(user, rating, ratingCount);
         this.advertSummaryViews = new ArrayList<>();
         List<Advert> advertList = user.getAdverts();
         for (Advert advert : advertList)

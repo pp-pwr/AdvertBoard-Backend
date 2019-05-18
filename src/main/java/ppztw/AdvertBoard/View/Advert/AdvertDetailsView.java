@@ -25,6 +25,7 @@ public class AdvertDetailsView extends AdvertSummaryView {
     List<String> tags;
     Map<String, Object> additionalInfo;
     Advert.Status status;
+    Integer entryCount;
 
 
     public AdvertDetailsView(Advert advert) {
@@ -39,6 +40,8 @@ public class AdvertDetailsView extends AdvertSummaryView {
         this.tags = new ArrayList<>();
         this.additionalInfo = new HashMap<>();
         this.status = advert.getStatus();
+        this.entryCount = advert.getAdvertStats() != null ?
+                advert.getAdvertStats().getEntryCount() : 0;
         for (Tag tag : advert.getTags())
             this.tags.add(tag.getName());
         for (AdvertInfo info : advert.getAdditionalInfo()) {
