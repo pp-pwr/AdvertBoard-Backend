@@ -3,7 +3,6 @@ package ppztw.AdvertBoard.Model.Advert;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ppztw.AdvertBoard.Model.User.User;
 
@@ -16,7 +15,6 @@ import java.util.List;
 @Table(name = "adverts")
 @Getter
 @Setter
-@NoArgsConstructor
 public class Advert {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,27 +50,27 @@ public class Advert {
     @OneToMany(cascade = CascadeType.ALL)
     private List<AdvertInfo> additionalInfo;
 
-    // @JsonGetter
-    // public String getBase64() {
-    //     if (image != null)
-    //         return "data:image/png:base64," + image.getBase64();
-    //     else return "";
-    // }
+    @OneToOne(cascade = CascadeType.ALL)
+    private AdvertStats advertStats;
 
+    public Advert() {
+        this.status = Status.OK;
+        this.tags = new ArrayList<>();
+        this.date = LocalDate.now();
+        this.advertStats = new AdvertStats();
+
+    }
 
     public Advert(String title, List<Tag> tags, String description, String imagePath,
                   Category subcategory, User user, List<AdvertInfo> additionalInfo) {
+        super();
         this.title = title;
-        this.tags = new ArrayList<>();
         this.description = description;
         this.imagePath = imagePath;
         this.tags = tags;
         this.category = subcategory;
-        this.date = LocalDate.now();
         this.user = user;
         this.additionalInfo = additionalInfo;
-
-        status = Status.OK;
     }
 
     public enum Status {OK, EDITED, ARCHIVED, BANNED}
