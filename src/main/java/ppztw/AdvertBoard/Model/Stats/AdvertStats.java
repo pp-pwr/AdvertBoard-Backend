@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import ppztw.AdvertBoard.Model.Advert.Advert;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
@@ -15,7 +15,7 @@ import javax.persistence.OneToOne;
 @Setter
 @AllArgsConstructor
 public class AdvertStats {
-    @Id
+    @EmbeddedId
     private Long id;
 
     @MapsId
