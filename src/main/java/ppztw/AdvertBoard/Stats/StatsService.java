@@ -8,7 +8,10 @@ import ppztw.AdvertBoard.Model.Stats.AdvertStats;
 import ppztw.AdvertBoard.Repository.Advert.AdvertStatsRepository;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StatsService {
@@ -47,6 +50,47 @@ public class StatsService {
         return findAdvertStatsById(advertId).getReportCount();
     }
 
+    public Map<Integer, Integer> getReportedAdvertsCountInYearBetweenMonths(Integer year,
+                                                                            Integer beginMonth,
+                                                                            Integer endMonth) {
+        Map<Integer, Integer> months = new HashMap<>();
+        for (int i = beginMonth; i <= endMonth; i++) {
+            Integer monthCount = getReportedAdvertsCountInYearAndMonth(year, i);
+            months.put(i, monthCount);
+        }
+        return months;
+    }
+
+    public Map<Integer, Integer> getAdvertReportsCountInYearBetweenMonths(Integer year,
+                                                                          Integer beginMonth,
+                                                                          Integer endMonth) {
+        Map<Integer, Integer> months = new HashMap<>();
+        for (int i = beginMonth; i <= endMonth; i++) {
+            Integer monthCount = getAdvertReportsCountInYearAndMonth(year, i);
+            months.put(i, monthCount);
+        }
+        return months;
+    }
+
+    public Integer getReportedAdvertsCountByDate(LocalDate date) {
+        return advertStatsRepository.countReportedAdvertsByDate(date);
+    }
+
+    public Integer getAdvertReportsCountByDate(LocalDate date) {
+        return advertStatsRepository.countAdvertReportsByDate(date);
+    }
+
+    private Integer getAdvertReportsCountInYearAndMonth(Integer year, Integer monthNum) {
+        return advertStatsRepository.countAdvertReportsByDateBetween(
+                YearMonth.of(year, monthNum).atDay(1),
+                YearMonth.of(year, monthNum).atEndOfMonth());
+    }
+
+    private Integer getReportedAdvertsCountInYearAndMonth(Integer year, Integer monthNum) {
+        return advertStatsRepository.countReportedAdvertsByDateBetween(
+                YearMonth.of(year, monthNum).atDay(1),
+                YearMonth.of(year, monthNum).atEndOfMonth());
+    }
 
     private AdvertStats findAdvertStatsById(Long advertId) {
         return advertStatsRepository.findById(advertId).orElseThrow(() ->
