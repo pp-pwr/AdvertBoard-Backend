@@ -7,6 +7,9 @@ import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
 import ppztw.AdvertBoard.Model.Stats.AdvertStats;
 import ppztw.AdvertBoard.Repository.Advert.AdvertStatsRepository;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 public class StatsService {
 
@@ -16,6 +19,9 @@ public class StatsService {
     public void addAdvertEntry(Long advertId) {
         AdvertStats advertStats = findAdvertStatsById(advertId);
         advertStats.setEntryCount(advertStats.getEntryCount() + 1);
+        List<LocalDate> entryDates = advertStats.getEntryDates();
+        entryDates.add(LocalDate.now());
+        advertStats.setEntryDates(entryDates);
         advertStatsRepository.save(advertStats);
     }
 
@@ -27,6 +33,9 @@ public class StatsService {
     public void setAdvertReported(Long advertId) {
         AdvertStats advertStats = findAdvertStatsById(advertId);
         advertStats.setReportCount(advertStats.getReportCount() + 1);
+        List<LocalDate> reportDates = advertStats.getReportDates();
+        reportDates.add(LocalDate.now());
+        advertStats.setReportDates(reportDates);
         advertStatsRepository.save(advertStats);
     }
 

@@ -35,7 +35,8 @@ public class StatsServiceTests {
     public void setUp() {
         List<AdvertStats> statsList = new ArrayList<>();
         for (long i = 0L; i < 10; i++) {
-            AdvertStats advertStats = new AdvertStats(i, null, 0, 0);
+            AdvertStats advertStats = new AdvertStats();
+            advertStats.setId(i);
             Mockito.when(advertStatsRepository.findById(i)).thenReturn(Optional.of(advertStats));
             statsList.add(advertStats);
         }
