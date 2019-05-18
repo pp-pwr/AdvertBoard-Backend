@@ -51,20 +51,21 @@ public class Advert {
     @OneToMany(cascade = CascadeType.ALL)
     private List<AdvertInfo> additionalInfo;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "advert")
     private AdvertStats advertStats;
 
     public Advert() {
         this.status = Status.OK;
         this.tags = new ArrayList<>();
         this.date = LocalDate.now();
-        this.advertStats = new AdvertStats();
-
+        AdvertStats advertStats = new AdvertStats();
+        advertStats.setAdvert(this);
+        this.advertStats = advertStats;
     }
 
     public Advert(String title, List<Tag> tags, String description, String imagePath,
                   Category subcategory, User user, List<AdvertInfo> additionalInfo) {
-        super();
+        this();
         this.title = title;
         this.description = description;
         this.imagePath = imagePath;
