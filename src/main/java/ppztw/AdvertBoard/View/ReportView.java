@@ -2,8 +2,8 @@ package ppztw.AdvertBoard.View;
 
 import lombok.Getter;
 import lombok.Setter;
-import ppztw.AdvertBoard.Model.User.CaseStatus;
-import ppztw.AdvertBoard.Model.User.Report;
+import ppztw.AdvertBoard.Model.Report.AdvertReport;
+import ppztw.AdvertBoard.Model.Report.CaseStatus;
 
 @Getter
 @Setter
@@ -20,7 +20,7 @@ public class ReportView {
 
     private CaseStatus caseStatus;
 
-    public ReportView(Report report) {
+    public ReportView(AdvertReport report) {
         this.id = report.getId();
         this.reportingUserId = report.getReportingUser().getId();
         this.reportingUserName = report.getReportingUser().getName();

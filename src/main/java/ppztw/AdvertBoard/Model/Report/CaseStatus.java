@@ -1,4 +1,4 @@
-package ppztw.AdvertBoard.Model.User;
+package ppztw.AdvertBoard.Model.Report;
 
 public enum CaseStatus {
     unsolved,

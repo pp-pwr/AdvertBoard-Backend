@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ppztw.AdvertBoard.Admin.AdminService;
 import ppztw.AdvertBoard.Model.Advert.Advert;
-import ppztw.AdvertBoard.Model.User.CaseStatus;
+import ppztw.AdvertBoard.Model.Report.CaseStatus;
 import ppztw.AdvertBoard.Payload.ApiResponse;
 import ppztw.AdvertBoard.Security.CurrentUser;
 import ppztw.AdvertBoard.Security.UserPrincipal;
@@ -61,6 +61,18 @@ public class AdminController {
                 statsService.getAdvertReportsCountInYearBetweenMonths(year, monthFrom, monthTo));
         reportStatsView.setMonthReportedAdvertsCount(
                 statsService.getReportedAdvertsCountInYearBetweenMonths(year, monthFrom, monthTo));
+
+        reportStatsView.setAllReportedProfilesCount(statsService.getReportedProfilesCount());
+        reportStatsView.setTodayProfileReportsCount(
+                statsService.getProfileReportsCountByDate(LocalDate.now()));
+        reportStatsView.setTodayReportedProfilesCount(
+                statsService.getReportedProfilesCountByDate(LocalDate.now()));
+        reportStatsView.setMonthProfileReportsCount(
+                statsService.getProfileReportsCountInYearBetweenMonths(year, monthFrom, monthTo));
+        reportStatsView.setMonthReportedProfilesCount(
+                statsService.getReportedProfilesCountInYearBetweenMonths(year, monthFrom, monthTo));
+
+
         return reportStatsView;
     }
 

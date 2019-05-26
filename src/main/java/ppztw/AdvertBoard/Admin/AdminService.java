@@ -7,10 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
 import ppztw.AdvertBoard.Model.Advert.Advert;
-import ppztw.AdvertBoard.Model.User.CaseStatus;
-import ppztw.AdvertBoard.Model.User.Report;
+import ppztw.AdvertBoard.Model.Report.AdvertReport;
+import ppztw.AdvertBoard.Model.Report.CaseStatus;
+import ppztw.AdvertBoard.Repository.Advert.AdvertReportRepository;
 import ppztw.AdvertBoard.Repository.Advert.AdvertRepository;
-import ppztw.AdvertBoard.Repository.ReportRepository;
 import ppztw.AdvertBoard.View.Advert.AdvertSummaryView;
 import ppztw.AdvertBoard.View.ReportView;
 
@@ -21,33 +21,33 @@ import java.util.List;
 public class AdminService {
 
     @Autowired
-    private ReportRepository reportRepository;
+    private AdvertReportRepository advertReportRepository;
 
     @Autowired
     private AdvertRepository advertRepository;
 
     public Page<ReportView> getAllReports(Pageable pageable) {
         List<ReportView> reportViewList = new ArrayList<>();
-        Page<Report> reports = reportRepository.findAll(pageable);
-        for (Report report : reports)
+        Page<AdvertReport> reports = advertReportRepository.findAll(pageable);
+        for (AdvertReport report : reports)
             reportViewList.add(new ReportView(report));
         return new PageImpl<>(reportViewList, pageable, reports.getTotalElements());
     }
 
     public Page<ReportView> getAllReportsByCaseStatus(CaseStatus caseStatus, Pageable pageable) {
         List<ReportView> reportViewList = new ArrayList<>();
-        Page<Report> reports = reportRepository.findAllByCaseStatus(pageable, caseStatus);
-        for (Report report : reports)
+        Page<AdvertReport> reports = advertReportRepository.findAllByCaseStatus(pageable, caseStatus);
+        for (AdvertReport report : reports)
             reportViewList.add(new ReportView(report));
         return new PageImpl<>(reportViewList, pageable, reports.getTotalElements());
     }
 
     public void setReportCaseStatus(Long reportId, CaseStatus caseStatus) {
-        Report report = reportRepository.findById(reportId)
-                .orElseThrow(() -> new ResourceNotFoundException("Report", "id", reportId));
+        AdvertReport report = advertReportRepository.findById(reportId)
+                .orElseThrow(() -> new ResourceNotFoundException("AdvertReport", "id", reportId));
         report.setCaseStatus(caseStatus);
 
-        reportRepository.save(report);
+        advertReportRepository.save(report);
     }
 
     public void setAdvertStatus(Long advertId, Advert.Status status) {
