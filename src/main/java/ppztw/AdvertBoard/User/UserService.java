@@ -11,15 +11,18 @@ import ppztw.AdvertBoard.Exception.ResourceNotFoundException;
 import ppztw.AdvertBoard.Model.User.Profile;
 import ppztw.AdvertBoard.Model.User.ProfileRating;
 import ppztw.AdvertBoard.Model.User.User;
+import ppztw.AdvertBoard.Model.User.VerificationToken;
 import ppztw.AdvertBoard.Payload.ProfileInfo;
 import ppztw.AdvertBoard.Repository.ProfileRatingRepository;
 import ppztw.AdvertBoard.Repository.UserRepository;
+import ppztw.AdvertBoard.Repository.VerificationTokenRepository;
 import ppztw.AdvertBoard.Security.UserPrincipal;
 import ppztw.AdvertBoard.Util.CategoryEntryUtils;
 import ppztw.AdvertBoard.View.User.ProfileSummaryView;
 import ppztw.AdvertBoard.View.User.ProfileView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -30,6 +33,9 @@ public class UserService {
 
     @Autowired
     private ProfileRatingRepository profileRatingRepository;
+
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
 
     public User findById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
@@ -108,4 +114,20 @@ public class UserService {
         return profileRatingRepository.getProfileRatingCount(profileId);
     }
 
+    public void createVerificationToken(User user, String tokenString) {
+        VerificationToken token = new VerificationToken(tokenString, user);
+        tokenRepository.save(token);
+    }
+
+    public void confirmToken(String tokenString) {
+        Calendar calendar = Calendar.getInstance();
+        VerificationToken token = tokenRepository.findByToken(tokenString).orElseThrow(() ->
+                new ResourceNotFoundException("VerificationToken", "token", tokenString));
+
+        User user = token.getUser();
+        if (token.getExpiryDate().getTime() - calendar.getTime().getTime() > 0) {
+            user.setEmailVerified(true);
+            userRepository.save(user);
+        }
+    }
 }
