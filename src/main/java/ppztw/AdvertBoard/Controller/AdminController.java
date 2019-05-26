@@ -30,14 +30,14 @@ public class AdminController {
     @Autowired
     private StatsService statsService;
 
-    @GetMapping("/report/all")
+    @GetMapping("/report/advert/all")
     @PreAuthorize("hasRole('ADMIN')")
     Page<ReportView> getAllReports(@CurrentUser UserPrincipal userPrincipal, Pageable pageable) {
 
         return adminService.getAllReports(pageable);
     }
 
-    @GetMapping("/report")
+    @GetMapping("/report/advert")
     @PreAuthorize("hasRole('ADMIN')")
     Page<ReportView> getAllReportsByCaseStatus(@CurrentUser UserPrincipal userPrincipal, Pageable pageable,
                                                @RequestParam CaseStatus caseStatus) {
@@ -45,7 +45,7 @@ public class AdminController {
         return adminService.getAllReportsByCaseStatus(caseStatus, pageable);
     }
 
-    @GetMapping("/report/stats")
+    @GetMapping("/report/advert/stats")
     @PreAuthorize("hasRole('ADMIN')")
     ReportStatsView getReportStats(@CurrentUser UserPrincipal userPrincipal,
                                    @RequestParam Integer year,
@@ -77,7 +77,7 @@ public class AdminController {
     }
 
 
-    @PostMapping("/report/status")
+    @PostMapping("/report/advert/status")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<?> setReportCaseStatus(@CurrentUser UserPrincipal userPrincipal,
                                           @RequestParam Long reportId,
