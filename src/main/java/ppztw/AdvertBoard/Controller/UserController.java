@@ -2,6 +2,7 @@ package ppztw.AdvertBoard.Controller;
 
 import org.hibernate.validator.constraints.Range;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import ppztw.AdvertBoard.Payload.ApiResponse;
 import ppztw.AdvertBoard.Payload.ProfileInfo;
 import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Security.CurrentUser;
+import ppztw.AdvertBoard.Security.OnRegistrationCompleteEvent;
 import ppztw.AdvertBoard.Security.UserPrincipal;
 import ppztw.AdvertBoard.User.UserService;
 import ppztw.AdvertBoard.View.User.ProfileSummaryView;
@@ -22,6 +24,10 @@ import javax.validation.Valid;
 
 @RestController
 public class UserController {
+
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
+
 
     @Autowired
     private UserRepository userRepository;
@@ -67,5 +73,13 @@ public class UserController {
                                          @RequestParam @Range(min = 1, max = 5) Integer rating) {
         userService.rateProfile(userPrincipal.getId(), profileId, rating);
         return ResponseEntity.ok(new ApiResponse(true, "User rated"));
+    }
+
+    @PostMapping("/user/refreshToken")
+    public ResponseEntity<?> refreshToken(@CurrentUser UserPrincipal userPrincipal) {
+        User user = userService.findById(userPrincipal.getId());
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
+
+        return ResponseEntity.ok(new ApiResponse(true, "New token generated"));
     }
 }
