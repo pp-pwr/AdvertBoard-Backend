@@ -17,6 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByEmail(String email);
 
+    Boolean existsByName(String name);
+
     @Query("SELECT u FROM #{#entityName} u WHERE u.profile.visibleName LIKE CONCAT('%',:name,'%')")
     Page<User> findAllByProfileVisibleNameLike(@Param("name") String nameContains, Pageable pageable);
 
