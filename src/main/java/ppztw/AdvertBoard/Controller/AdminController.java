@@ -45,7 +45,7 @@ public class AdminController {
         return adminService.getAllReportsByCaseStatus(caseStatus, pageable);
     }
 
-    @GetMapping("/report/advert/stats")
+    @GetMapping("/report/stats")
     @PreAuthorize("hasRole('ADMIN')")
     ReportStatsView getReportStats(@CurrentUser UserPrincipal userPrincipal,
                                    @RequestParam Integer year,
