@@ -133,9 +133,9 @@ public class AdminController {
     @PostMapping("/user/role")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<?> setUserRole(@CurrentUser UserPrincipal userPrincipal, @RequestParam Long profileId,
-                                  @RequestParam Role role) {
+                                  @RequestParam String role) {
 
-        adminService.setUserRole(profileId, role);
+        adminService.setUserRole(profileId, Role.valueOf(role));
         return ResponseEntity.ok(new ApiResponse(true, "Role changed"));
     }
 
