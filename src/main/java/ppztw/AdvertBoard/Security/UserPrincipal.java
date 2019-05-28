@@ -29,10 +29,13 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     public static UserPrincipal create(User user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         if (user.getRole() == Role.admin)
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        if (user.getRole() == Role.banned)
+            authorities.add(new SimpleGrantedAuthority("ROLE_BANNED"));
+        else
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
         return new UserPrincipal(
                 user.getId(),

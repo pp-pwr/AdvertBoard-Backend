@@ -2,6 +2,7 @@ package ppztw.AdvertBoard.Security.OAuth2;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -16,6 +17,7 @@ import ppztw.AdvertBoard.Model.User.User;
 import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Security.OAuth2.User.OAuth2UserInfo;
 import ppztw.AdvertBoard.Security.OAuth2.User.OAuth2UserInfoFactory;
+import ppztw.AdvertBoard.Security.OnRegistrationCompleteEvent;
 import ppztw.AdvertBoard.Security.UserPrincipal;
 
 import java.util.Optional;
@@ -24,6 +26,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    ApplicationEventPublisher eventPublisher;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -56,6 +61,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user = updateExistingUser(user, oAuth2UserInfo);
         } else {
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
         }
 
         return UserPrincipal.create(user, oAuth2User.getAttributes());

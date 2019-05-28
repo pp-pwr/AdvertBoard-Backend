@@ -155,7 +155,7 @@ public class AdvertController {
                                           @Valid @RequestBody ReportAdvertRequest request) {
         reportService.addReport(userPrincipal.getId(), request.getAdvertId(), request.getComment());
         statsService.setAdvertReported(request.getAdvertId());
-        return ResponseEntity.ok(new ApiResponse(true, "Report added"));
+        return ResponseEntity.ok(new ApiResponse(true, "AdvertReport added"));
     }
 
 

@@ -1,32 +1,27 @@
 package ppztw.AdvertBoard.View;
 
-import lombok.Getter;
-import lombok.Setter;
-import ppztw.AdvertBoard.Model.Report.AdvertReport;
 import ppztw.AdvertBoard.Model.Report.CaseStatus;
+import ppztw.AdvertBoard.Model.Report.ProfileReport;
 
-@Getter
-@Setter
-public class ReportView {
+public class ProfileReportView {
     private Long id;
 
     private Long reportingUserId;
 
     private String reportingUserName;
 
-    private Long reportedAdvertId;
+    private Long reportedProfileId;
 
     private String comment;
 
     private CaseStatus caseStatus;
 
-    public ReportView(AdvertReport report) {
+    public ProfileReportView(ProfileReport report) {
         this.id = report.getId();
         this.reportingUserId = report.getReportingUser().getId();
         this.reportingUserName = report.getReportingUser().getName();
-        this.reportedAdvertId = report.getReportedAdvert().getId();
+        this.reportedProfileId = report.getReportedProfile().getId();
         this.comment = report.getComment();
         this.caseStatus = report.getCaseStatus();
     }
-
 }

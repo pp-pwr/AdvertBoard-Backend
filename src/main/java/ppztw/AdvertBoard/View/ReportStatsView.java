@@ -17,4 +17,11 @@ public class ReportStatsView {
     Integer allReportedAdvertsCount;
     Integer todayAdvertReportsCount;
     Integer todayReportedAdvertsCount;
+
+    Map<Integer, Integer> monthProfileReportsCount;
+    Map<Integer, Integer> monthReportedProfilesCount;
+    Integer allReportedProfilesCount;
+    Integer todayProfileReportsCount;
+    Integer todayReportedProfilesCount;
+
 }
