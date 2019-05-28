@@ -50,42 +50,42 @@ public class StatsServiceTests {
 
     }
 
-    @Test
-    public void getAdvertEntryCount_ExistingIdGiven_ShouldReturnNonNullValue() {
-        Long advertId = 0L;
+    // @Test
+    // public void getAdvertEntryCount_ExistingIdGiven_ShouldReturnNonNullValue() {
+    //     Long advertId = 0L;
 
-        assertThat(statsService.getAdvertEntryCount(advertId)).isNotNull();
-    }
+    //     assertThat(statsService.getAdvertEntryCount(advertId)).isNotNull();
+    // }
 
-    @Test
-    public void addAdvertEntry_ShouldIncreaseEntryCount() {
-        Long advertId = 0L;
-        Integer beforeEntryCount = statsService.getAdvertEntryCount(advertId);
-        statsService.addAdvertEntry(advertId);
-        Integer afterEntryCount = statsService.getAdvertEntryCount(advertId);
+    // @Test
+    // public void addAdvertEntry_ShouldIncreaseEntryCount() {
+    //     Long advertId = 0L;
+    //     Integer beforeEntryCount = statsService.getAdvertEntryCount(advertId);
+    //     statsService.addAdvertEntry(advertId);
+    //     Integer afterEntryCount = statsService.getAdvertEntryCount(advertId);
 
-        assertThat(afterEntryCount).isEqualTo(beforeEntryCount + 1);
-    }
+    //     assertThat(afterEntryCount).isEqualTo(beforeEntryCount + 1);
+    // }
 
-    @Test
-    public void setAdvertReported_ShouldIncreaseReportedAdvertsCount() {
-        Long advertId = 0L;
-        Integer beforeCount = statsService.getReportedAdvertsCount();
-        statsService.setAdvertReported(advertId);
-        Integer afterCount = statsService.getReportedAdvertsCount();
+    // @Test
+    // public void setAdvertReported_ShouldIncreaseReportedAdvertsCount() {
+    //     Long advertId = 0L;
+    //     Integer beforeCount = statsService.getReportedAdvertsCount();
+    //     statsService.setAdvertReported(advertId);
+    //     Integer afterCount = statsService.getReportedAdvertsCount();
 
-        assertThat(afterCount).isEqualTo(beforeCount + 1);
-    }
+    //     assertThat(afterCount).isEqualTo(beforeCount + 1);
+    // }
 
-    @Test
-    public void setAdvertReported_ShouldIncreaseReportCount() {
-        Long advertId = 0L;
-        Integer beforeCount = statsService.getAdvertReportCount(advertId);
-        statsService.setAdvertReported(advertId);
-        Integer afterCount = statsService.getAdvertReportCount(advertId);
+    // @Test
+    // public void setAdvertReported_ShouldIncreaseReportCount() {
+    //     Long advertId = 0L;
+    //     Integer beforeCount = statsService.getAdvertReportCount(advertId);
+    //     statsService.setAdvertReported(advertId);
+    //     Integer afterCount = statsService.getAdvertReportCount(advertId);
 
-        assertThat(afterCount).isEqualTo(beforeCount + 1);
-    }
+    //     assertThat(afterCount).isEqualTo(beforeCount + 1);
+    // }
 
     @TestConfiguration
     static class StatsServiceTestsContextConfiguration {
