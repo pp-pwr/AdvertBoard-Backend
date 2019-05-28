@@ -86,6 +86,8 @@ public class AdminService {
         ProfileReport report = profileReportRepository.findById(reportId)
                 .orElseThrow(() -> new ResourceNotFoundException("ProfileReport", "id", reportId));
         report.setCaseStatus(caseStatus);
+
+        profileReportRepository.save(report);
     }
 
     public void setAdvertStatus(Long advertId, Advert.Status status) {
