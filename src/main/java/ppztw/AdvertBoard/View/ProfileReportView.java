@@ -1,5 +1,7 @@
 package ppztw.AdvertBoard.View;
 
+import lombok.Getter;
+import lombok.Setter;
 import ppztw.AdvertBoard.Model.Report.CaseStatus;
 import ppztw.AdvertBoard.Model.Report.ProfileReport;
 
