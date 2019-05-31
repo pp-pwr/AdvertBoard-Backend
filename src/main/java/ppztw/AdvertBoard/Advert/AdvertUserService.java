@@ -85,21 +85,26 @@ public class AdvertUserService {
         Advert advert = findAdvert(userId, request.getId()).orElseThrow(() ->
                 new ResourceNotFoundException("Advert", "id", request.getId()));
 
-        String imagePath;
-        
-        try {
-            imagePath = saveImage(userId, request.getImageFile());
-        } catch (Exception e) {
-            throw new IncorrectFileException(request.getImageFile() != null ? request.getImageFile().getOriginalFilename() : null, e);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
+
+        MultipartFile image = request.getImageFile();
+
+        String imagePath = "";
+        if (image != null) {
+            try {
+                imagePath = saveImage(user.getId(), image);
+            } catch (Exception e) {
+                throw new IncorrectFileException(image.getOriginalFilename(), e);
+            }
         }
-    
+        if (imagePath.length() > 0)
+            advert.setImagePath(imagePath);
         advert.setTitle(request.getTitle() == null ? advert.getTitle() : request.getTitle());
         advert.setTags(request.getTags() == null ? advert.getTags() : processTags(request.getTags()));
         advert.setDescription(request.getDescription() == null ?
                 advert.getDescription() : request.getDescription());
-        // advert.setImage(request.getImage() == null ? advert.getImage() :
-        //         processImage(request.getImage()));
-        advert.setImagePath(imagePath == null ? advert.getImagePath() : imagePath);
+
         advert.setAdditionalInfo(request.getAdditionalInfo() == null ?
                 advert.getAdditionalInfo() :
                 processAdvertInfo(advert.getCategory(), request.getAdditionalInfo()));
@@ -120,7 +125,7 @@ public class AdvertUserService {
             try {
                 imagePath = saveImage(user.getId(), image);
             } catch (Exception e) {
-                throw new IncorrectFileException(image != null ? image.getOriginalFilename() : null, e);
+                throw new IncorrectFileException(image.getOriginalFilename(), e);
             }
         }
         List<AdvertInfo> advertInfos = processAdvertInfo(category, additionalInfo);
