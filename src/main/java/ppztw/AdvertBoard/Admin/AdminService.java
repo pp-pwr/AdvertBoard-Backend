@@ -85,7 +85,7 @@ public class AdminService {
     public void setProfileReportCaseStatus(Long reportId, CaseStatus caseStatus) {
         ProfileReport report = profileReportRepository.findById(reportId)
                 .orElseThrow(() -> new ResourceNotFoundException("ProfileReport", "id", reportId));
-        report.setCaseStatus(caseStatus)
+        report.setCaseStatus(caseStatus);
 
         profileReportRepository.save(report);
     }
