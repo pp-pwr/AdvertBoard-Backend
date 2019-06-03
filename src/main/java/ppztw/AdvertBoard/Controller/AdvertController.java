@@ -95,6 +95,7 @@ public class AdvertController {
                                         @Valid @RequestParam("imageFile") @Nullable MultipartFile imageFile) {
 
         EditAdvertRequest editAdvertRequest = new EditAdvertRequest();
+        editAdvertRequest.setId(id);
         editAdvertRequest.setTitle(title);
         editAdvertRequest.setTags(tags);
         editAdvertRequest.setDescription(description);
