@@ -63,7 +63,7 @@ public class AdvertController {
     @PostMapping(value = "/add")
     @PreAuthorize("hasRole('USER')")
     @Transactional
-    public ResponseEntity<?> addAdvert2(@CurrentUser UserPrincipal userPrincipal,
+    public ResponseEntity<?> addAdvert(@CurrentUser UserPrincipal userPrincipal,
                                        @Valid @RequestParam("title") @NotBlank String title,
                                        @Valid @RequestParam("tags") @Nullable List<String> tags,
                                        @Valid @RequestParam("description") @NotBlank String description,
@@ -87,7 +87,19 @@ public class AdvertController {
     @PreAuthorize("hasRole('USER')")
     @Transactional
     public ResponseEntity<?> editAdvert(@CurrentUser UserPrincipal userPrincipal,
-                                        @Valid @RequestBody EditAdvertRequest editAdvertRequest) {
+                                        @Valid @RequestParam("id") Long id,
+                                        @Valid @RequestParam("title") @NotBlank String title,
+                                        @Valid @RequestParam("tags") @Nullable List<String> tags,
+                                        @Valid @RequestParam("description") @NotBlank String description,
+                                        @Valid @RequestParam("additionalInfo") @Nullable Map<String, String> additionalInfo,
+                                        @Valid @RequestParam("imageFile") @Nullable MultipartFile imageFile) {
+
+        EditAdvertRequest editAdvertRequest = new EditAdvertRequest();
+        editAdvertRequest.setTitle(title);
+        editAdvertRequest.setTags(tags);
+        editAdvertRequest.setDescription(description);
+        editAdvertRequest.setAdditionalInfo(additionalInfo);
+        editAdvertRequest.setImageFile(imageFile);
 
         advertUserService.editAdvert(userPrincipal.getId(), editAdvertRequest);
         return ResponseEntity.ok(new ApiResponse(true, "Advert edited successfully"));
