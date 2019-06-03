@@ -16,6 +16,7 @@ public class AdvertSummaryView {
     Long categoryId;
     LocalDate date;
     Boolean recommended;
+    Long categoryId;
 
     public AdvertSummaryView(Advert advert) {
         this.id = advert.getId();
