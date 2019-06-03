@@ -15,12 +15,14 @@ public class AdvertSummaryView {
     String pic;
     LocalDate date;
     Boolean recommended;
+    Long categoryId;
 
     public AdvertSummaryView(Advert advert) {
         this.id = advert.getId();
         this.title = advert.getTitle();
         this.pic = advert.getImagePath();
         this.date = advert.getDate();
+        this.categoryId = advert.getCategory().getId();
         recommended = false;
     }
 }
