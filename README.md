@@ -277,8 +277,152 @@ response: {
 
 ### Get all reports
 ```
-path: /report/advert/all
+path: admin/report/advert/all
 method: get
 header: Authorization: Bearer <TOKEN>
 request param: limit, sort, page
+response: {
+    "id": 0,
+    "reportingUserId": 0,
+    "reportingUserName": "username",
+    "reportedAdvertId": 0,
+    "comment": "comment",
+    "caseStatus": 0
+}
+```
+
+### 
+
+### Get adverts by case status
+```
+path: admin/report/advert
+method: get
+header: Authorization: Bearer <TOKEN>
+request param: limit, sort, page, caseStatus
+response: {
+    "id": 0,
+    "reportingUserId": 0,
+    "reportingUserName": "username",
+    "reportedAdvertId": 0,
+    "comment": "comment",
+    "caseStatus": <caseStatus>
+}
+```
+
+
+### Get all profile reports
+```
+path: admin/report/profile/all
+method: get
+header: Authorization: Bearer <TOKEN>
+request param: limit, sort, page
+response: {
+    "id": 0,
+    "reportingUserId": 0,
+    "reportingUserName": "username",
+    "reportedProfileId": 0,
+    "comment": "comment",
+    "caseStatus": 0
+}
+```
+
+### Get profiles by case status
+```
+path: admin/report/profile
+method: get
+header: Authorization: Bearer <TOKEN>
+request param: limit, sort, page, caseStatus
+response: {
+    "id": 0,
+    "reportingUserId": 0,
+    "reportingUserName": "username",
+    "reportedProfileId": 0,
+    "comment": "comment",
+    "caseStatus": <caseStatus>
+}
+```
+
+### Get report stats
+```
+path: admin/report/stats
+method: get
+header: Authorization: Bearer <TOKEN>
+request param: year, monthFrom, monthTo
+response: {
+    "monthAdvertReportsCount": {"1": 0, "2": 0, ..., "12": 0},
+    "monthReportedAdvertsCount": {"1": 0, "2": 0, ..., "12": 0},
+    "monthProfileReportsCount": {"1": 0, "2": 0, ..., "12": 0},
+    "monthReportedProfilesCount": {"1": 0, "2": 0, ..., "12": 0},
+    "allReportedAdvertsCount": 0,
+    "todayAdvertsReportsCount": 0,
+    "todayReportedAdvertsCount": 0,
+    "allReportedProfilesCount": 0,
+    "todayProfileReportsCount": 0,
+    "todayReportedProfilesCount": 0
+}
+```
+
+
+### Set advert report case status
+```
+path: admin/report/advert/status
+method: post
+header: Authorization: Bearer <TOKEN>
+request param: reportId, status
+response: response: 200 OK
+```
+
+### Set profile report case status
+```
+path: admin/report/profile/status
+method: post
+header: Authorization: Bearer <TOKEN>
+request param: reportId, status
+response: response: 200 OK
+```
+
+### Set advert status
+```
+path: admin/advert/status
+method: post
+header: Authorization: Bearer <TOKEN>
+request param: reportId, status
+response: response: 200 OK
+```
+
+### Set user role
+```
+path: admin/advert/status
+method: post
+header: Authorization: Bearer <TOKEN>
+request param: profileId, role
+response: response: 200 OK
+```
+
+### Get banned adverts
+```
+path: admin/advert/banned
+method: get
+header: Authorization: Bearer <TOKEN>
+request param: page, sort, limit
+response: {
+    "id": 0,
+    "title": "title",
+    "pic": "./images/user/<USER_ID>/<ADVERT_HASH>.png",
+    "categoryId": 0,
+    "date": "04-06-2019",
+    "recommended": false
+}
+```
+
+### Get profiles by user role
+```
+path: admin/profile
+method: get
+header: Authorization: Bearer <TOKEN>
+request param: page, sort, limit, role
+response: {
+    "id": 0,
+    "visibleName": "profile name"
+}
 ```
