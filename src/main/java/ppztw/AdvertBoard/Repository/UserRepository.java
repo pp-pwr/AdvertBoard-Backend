@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import ppztw.AdvertBoard.Model.User.Role;
 import ppztw.AdvertBoard.Model.User.User;
 
 import java.util.Optional;
@@ -23,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findAllByProfileVisibleNameLike(@Param("name") String nameContains, Pageable pageable);
 
     Optional<User> findByProfileId(Long profileId);
+
+    Page<User> findAllByRole(Pageable pageable, Role role);
 }

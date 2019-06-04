@@ -21,6 +21,8 @@ public class MyProfileView extends ProfileSummaryView {
 
     Integer ratingCount;
 
+    Boolean isVerified;
+
     public MyProfileView(User user, Double rating, Integer ratingCount) {
         super(user);
         this.firstName = user.getProfile().getFirstName();
@@ -29,5 +31,6 @@ public class MyProfileView extends ProfileSummaryView {
         this.contactMail = user.getProfile().getContactMail();
         this.rating = rating;
         this.ratingCount = ratingCount;
+        this.isVerified = user.getEmailVerified();
     }
 }

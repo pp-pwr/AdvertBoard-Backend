@@ -13,6 +13,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import ppztw.AdvertBoard.Model.Stats.AdvertStats;
 import ppztw.AdvertBoard.Repository.Advert.AdvertStatsRepository;
+import ppztw.AdvertBoard.Repository.ProfileStatsRepository;
+import ppztw.AdvertBoard.Repository.UserRepository;
 import ppztw.AdvertBoard.Stats.StatsService;
 
 import java.util.ArrayList;
@@ -30,6 +32,12 @@ public class StatsServiceTests {
 
     @MockBean
     private AdvertStatsRepository advertStatsRepository;
+
+    @MockBean
+    private ProfileStatsRepository profileStatsRepository;
+
+    @MockBean
+    private UserRepository userRepository;
 
     @Before
     public void setUp() {
