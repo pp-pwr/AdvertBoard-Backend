@@ -13,6 +13,7 @@ public class AdvertSummaryView {
     Long id;
     String title;
     String pic;
+    Long categoryId;
     LocalDate date;
     Boolean recommended;
 
@@ -21,6 +22,7 @@ public class AdvertSummaryView {
         this.title = advert.getTitle();
         this.pic = advert.getImagePath();
         this.date = advert.getDate();
+        this.categoryId = advert.getCategory().getId();
         recommended = false;
     }
 }

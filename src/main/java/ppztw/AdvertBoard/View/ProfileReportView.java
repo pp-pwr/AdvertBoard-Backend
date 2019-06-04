@@ -1,8 +1,12 @@
 package ppztw.AdvertBoard.View;
 
+import lombok.Getter;
+import lombok.Setter;
 import ppztw.AdvertBoard.Model.Report.CaseStatus;
 import ppztw.AdvertBoard.Model.Report.ProfileReport;
 
+@Getter
+@Setter
 public class ProfileReportView {
     private Long id;
 
