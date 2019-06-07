@@ -6,6 +6,9 @@ spring:
     url: jdbc:postgresql://packy.db.elephantsql.com:5432/rmyrrehv
     username: rmyrrehv
     password: NVnTV7vfed0K-W7uGFD7ZmRIX1Z7MjRn
+    # url: jdbc:postgresql://localhost:5432/postgres
+    # username: postgres
+    # password: advertboard
 
   jpa:
     database: postgresql

@@ -34,4 +34,4 @@ HELP.md
 ## Images ##
 /images/user/
 
-application.yaml
+/src/main/resources/application.yaml
