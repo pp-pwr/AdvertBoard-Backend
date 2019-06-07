@@ -67,9 +67,15 @@ app:
 ```
 Modify the **SECRET** field, and put your redirect uris in the same way the first one is put. After all these steps, the project will be ready to run.
 
+## Database schema
+
+We used PostgreSQL 9 as database management system.
+![alt text](advertboard_db_1.png "db1")
+![alt text](advertboard_db_2.png "db2")
+
 ## Tests
 
-There are implemented repository and service tests. Combined with CI, it will allow you to reduce errors during development new functionalities.
+There are implemented repository and service tests. Combined with CI, it will allow you to reduce errors during development of   new functionalities.
 
 ![alt text](testscreen.png "tests image")
 
