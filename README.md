@@ -1,6 +1,6 @@
 # AdvertBoard Backend
 
-Backend of the AdvertBoard application
+Backend of the AdvertBoard application. The core functionalities of the application revolve around OAuth2, CRUD operations on adverts, administrator panel and users.
 
 ## Path prefix to all queries
 ```
