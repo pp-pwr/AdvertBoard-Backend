@@ -14,9 +14,9 @@ The next step is changing database and oauth credentials to your own. In order t
 ```
 spring:
   datasource:
-    url: jdbc:postgresql://<URL>
-    username: <USER>
-    password: <PASSWORD>
+    url: jdbc:postgresql://URL
+    username: USER
+    password: PASSWORD
 
   jpa:
     database: postgresql
@@ -30,7 +30,7 @@ spring:
           lob:
             non_contextual_creation: true
 ```
-You need to put database url instead of <URL>, and credentials in place of <USER> and <PASSWORD>.
+You need to put database url instead of **URL**, and credentials in place of **USER** and **PASSWORD**.
 
 After that, you need to change Oauth2 credentials:
 ```
@@ -39,33 +39,33 @@ security:
       client:
         registration:
           google:
-            clientId: <ID>
+            clientId: ID
             clientSecret: <SECRET>
             redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
           facebook:
-            clientId: <ID>
-            clientSecret: <SECRET>
+            clientId: ID
+            clientSecret: SECRET
             redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - public_profile
 ```
-Replace <ID> and <SECRET> with your own.
+Replace **ID** and **SECRET** with your own.
     
 The last step is to configure token and redirect uris:
 ```
 app:
   auth:
-    tokenSecret: <SECRET>
+    tokenSecret: SECRET
     tokenExpirationMsec: 864000000
   oauth2:
     authorizedRedirectUris:
       - http://localhost:3000/oauth2/redirect
 ```
-Modify the <SECRET> field, and put your redirect uris in the same way the first one is put. After all these steps, the project will be ready to run.
+Modify the **SECRET** field, and put your redirect uris in the same way the first one is put. After all these steps, the project will be ready to run.
 
 
 ## Path prefix to all queries
