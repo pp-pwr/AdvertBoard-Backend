@@ -67,10 +67,14 @@ app:
 ```
 Modify the **SECRET** field, and put your redirect uris in the same way the first one is put. After all these steps, the project will be ready to run.
 
+## Tests
+
+There are implemented repository and service tests. Combined with CI, it will allow you to reduce errors during development new functionalities.
+
+![alt text](testscreen.png "tests image")
 
 
-
-# Queries
+## Queries
 
 ## Path prefix to all queries
 ```
