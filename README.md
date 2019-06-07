@@ -68,12 +68,17 @@ app:
 Modify the **SECRET** field, and put your redirect uris in the same way the first one is put. After all these steps, the project will be ready to run.
 
 
+
+
+# Queries
+
 ## Path prefix to all queries
 ```
 /api
 ```
+<details>
+<summary>Click to see api calls</summary>
 
-# Queries
 
 ## User
 
@@ -492,3 +497,5 @@ response: {
     "visibleName": "profile name"
 }
 ```
+
+</details>
