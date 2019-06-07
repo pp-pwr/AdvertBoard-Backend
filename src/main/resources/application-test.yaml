@@ -27,37 +27,3 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 20MB
-
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            clientId: 790119077677-0tg65et9si754tg66bea5hh8nknhu1ag.apps.googleusercontent.com
-            clientSecret: EsRKGr6qm0LNrtMyz8yoTFKW
-            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
-            scope:
-              - email
-              - profile
-          facebook:
-            clientId: 275078806738703
-            clientSecret: eaa8b3502da10581135acb2340d05502
-            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
-            scope:
-              - email
-              - public_profile
-        provider:
-          facebook:
-            authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
-            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
-            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
-app:
-  auth:
-    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
-    tokenExpirationMsec: 864000000
-  oauth2:
-    authorizedRedirectUris:
-      - http://localhost:3000/oauth2/redirect
-      - http://advertboard.pl:3000/oauth2/redirect
-      - http://pwr-advert-board-frontend.herokuapp.com/oauth2/redirect
-
