@@ -2,6 +2,72 @@
 
 Backend of the AdvertBoard application. The core functionalities of the application revolve around OAuth2, CRUD operations on adverts, administrator panel and users.
 
+## Usage
+
+To download the project, simply write down into the terminal:
+```
+https://github.com/pp-pwr/AdvertBoard-Backend/
+```
+Or just press 'Clone or Download' on the website.
+
+The next step is changing database and oauth credentials to your own. In order to do that, you need to modify application.yaml. Config part for the postgres db we were using looks like this:
+```
+spring:
+  datasource:
+    url: jdbc:postgresql://<URL>
+    username: <USER>
+    password: <PASSWORD>
+
+  jpa:
+    database: postgresql
+    dialect: org.hibernate.dialect.PostgreSQL9Dialect
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+```
+You need to put database url instead of <URL>, and credentials in place of <USER> and <PASSWORD>.
+
+After that, you need to change Oauth2 credentials:
+```
+security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: <ID>
+            clientSecret: <SECRET>
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          facebook:
+            clientId: <ID>
+            clientSecret: <SECRET>
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - public_profile
+```
+Replace <ID> and <SECRET> with your own.
+    
+The last step is to configure token and redirect uris:
+```
+app:
+  auth:
+    tokenSecret: <SECRET>
+    tokenExpirationMsec: 864000000
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+```
+Modify the <SECRET> field, and put your redirect uris in the same way the first one is put. After all these steps, the project will be ready to run.
+
+
 ## Path prefix to all queries
 ```
 /api
